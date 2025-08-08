@@ -482,16 +482,14 @@ function buildOverlayMain() {
       input.addEventListener("paste", (event) => {
         let splitText = (event.clipboardData || window.clipboardData).getData("text").split(" ").filter(n => n).map(Number).filter(n => !isNaN(n)); //split and filter all Non Numbers
 
-        console.log("splitText: " + splitText);
-
         if (splitText.length !== 4 ) { //if we dont have 4 clean coordinates end the function
           return;
         }
 
-        let coords = selectAllCoordinateInputs(document);
+        let coords = selectAllCoordinateInputs(document); 
 
-        for (let i = 0; i < coords.length; i++) {
-          coords[i].value = splitText[i];
+        for (let i = 0; i < coords.length; i++) { 
+          coords[i].value = splitText[i]; //add the split vales
         }
         
         event.preventDefault(); //prevent the pasting of the original paste that would overide the split value

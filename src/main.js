@@ -478,7 +478,7 @@ function buildOverlayMain() {
           }
         ).buildElement()
     .addInput({ 'type': 'number', 'id': 'bm-input-tx', 'placeholder': 'Tl X', 'min': 0, 'max': 2047, 'step': 1, 'required': true }, (instance, input) => {
-
+      //if a paste happens on tx, split and format it into other coordinates if possible
       input.addEventListener("paste", (event) => {
         let splitText = (event.clipboardData || window.clipboardData).getData("text").split(" ").filter(n => n).map(Number).filter(n => !isNaN(n)); //split and filter all Non Numbers
 

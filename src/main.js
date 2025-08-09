@@ -666,7 +666,12 @@ function buildOverlayMain() {
         switch (response.status) {
           case 200:
             const responseJSON = await response.json();
-            templateManager.importJSON(responseJSON);
+            const res = await templateManager.importJSON(responseJSON);
+            console.log(res)
+            if (res)
+              instance.handleDisplayStatus("Successfully imported template!");
+            else
+              instance.handleDisplayError("An error occured when importing template, provided data may be malformed")
             console.log(responseJSON);
             break;
           case 404:

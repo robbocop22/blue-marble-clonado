@@ -12,6 +12,8 @@
 // @downloadURL  https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/BlueMarble.user.js
 // @run-at       document-start
 // @match        *://*.wplace.live/*
+// @connect		 *
+// @grant        GM_xmlhttpRequest
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM.setValue

@@ -171,8 +171,16 @@ div:has(> #bm-button-teleport) {
   vertical-align: bottom;
 }
 
+#bm-json-buttons{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
 #bm-import-url-input{
-  margin: 0 5px;
+  margin: 5px 0;
   border-radius: 30px;
   font-size: small;
   padding: 0.5ch;

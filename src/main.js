@@ -650,6 +650,7 @@ function buildOverlayMain() {
     .buildElement()
     .addInput({ id: "bm-import-url-input", type: "text", placeholder: "URL to import from" })
     .buildElement()
+    .addDiv({id: "bm-json-buttons"})
     .addButton({ id: "bm-button-import", textContent: "Import JSON" }, (instance, button) => {
       button.onclick = async () => {
         const importURL = document.querySelector("#bm-import-url-input").value;
@@ -714,6 +715,7 @@ function buildOverlayMain() {
         }
       };
     })
+    .buildElement()
     .buildElement()
     .addTextarea({
       id: overlayMain.outputStatusId,

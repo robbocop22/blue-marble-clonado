@@ -658,7 +658,8 @@ function buildOverlayMain() {
           return;
         }
         const response = await fetch(importURL);
-        if (!response) { // Got no response from the fetched location, website at url likely doesn't exist
+        if (!response) {
+          // Got no response from the fetched location, website at url likely doesn't exist
           instance.handleDisplayError(
             "No data was found at given url, are you sure you inputted it correctly?"
           );

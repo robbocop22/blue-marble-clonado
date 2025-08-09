@@ -171,6 +171,14 @@ div:has(> #bm-button-teleport) {
   vertical-align: bottom;
 }
 
+#bm-import-url-input{
+  border-radius: 30px;
+  font-size: small;
+  padding: 0.5ch;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
 /* Tile (x, y) & Pixel (x, y) input fields */
 #bm-contain-coords input[type="number"] {
   appearance: auto;

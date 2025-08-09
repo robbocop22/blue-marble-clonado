@@ -340,11 +340,10 @@ export default class TemplateManager {
         console.log(templateKey);
 
         if (templates.hasOwnProperty(template)) {
-
-          const templateKeyArray = templateKey.split(' '); // E.g., "0 $Z" -> ["0", "$Z"]
+          const templateKeyArray = templateKey.split(" "); // E.g., "0 $Z" -> ["0", "$Z"]
           const sortID = Number(templateKeyArray?.[0]); // Sort ID of the template
-          const authorID = templateKeyArray?.[1] || '0'; // User ID of the person who exported the template
-          const displayName = templateValue.name || `Template ${sortID || ''}`; // Display name of the template
+          const authorID = templateKeyArray?.[1] || "0"; // User ID of the person who exported the template
+          const displayName = templateValue.name || `Template ${sortID || ""}`; // Display name of the template
           // const coords = templateValue?.coords?.split(',').map(Number); // "1,2,3,4" -> [1, 2, 3, 4]
           const tilesbase64 = templateValue.tiles;
           const templateTiles = {}; // Stores the template bitmap tiles for each tile.
@@ -356,7 +355,7 @@ export default class TemplateManager {
               const templateUint8Array = base64ToUint8(encodedTemplateBase64); // Base 64 -> Uint8Array
 
               const templateBlob = new Blob([templateUint8Array], { type: "image/png" }); // Uint8Array -> Blob
-              const templateBitmap = await createImageBitmap(templateBlob) // Blob -> Bitmap
+              const templateBitmap = await createImageBitmap(templateBlob); // Blob -> Bitmap
               templateTiles[tile] = templateBitmap;
             }
           }
@@ -365,21 +364,28 @@ export default class TemplateManager {
           const template = new Template({
             displayName: displayName,
             sortID: sortID || this.templatesArray?.length || 0,
-            authorID: authorID || '',
+            authorID: authorID || "",
             //coords: coords
           });
           template.chunked = templateTiles;
           this.templatesArray.push(template);
           console.log(this.templatesArray);
           console.log(`^^^ This ^^^`);
+
+          // Creates the JSON object if it does not already exist
+          if (!this.templatesJSON) {
+            this.templatesJSON = await this.createJSON();
+            console.log(`Creating JSON...`);
+          }
+          
           // Update the current JSON object with the new template
           this.templatesJSON.templates[`${sortID} ${authorID}`] = {
             name: displayName,
             coords: templateValue?.coords,
             enabled: true,
-            tiles: templateTiles, // Stores the chunked tile buffers
-          }; 
-          this.#storeTemplates() // Update the userscript storage
+            tiles: tilesbase64, // Stores the chunked tile buffers
+          };
+          this.#storeTemplates(); // Update the userscript storage
         }
       }
     }

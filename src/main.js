@@ -648,16 +648,40 @@ function buildOverlayMain() {
     })
     .buildElement()
     .buildElement()
-    .addButton({ id: "bm-button-export", textContent: "Import JSON" }, (instance, button) => {
+    .addInput({ id: "bm-import-url-input", type: "text", placeholder: "URL to import from" }).buildElement()
+    .addButton({ id: "bm-button-import", textContent: "Import JSON" }, (instance, button) => {
       button.onclick = async () => {
-        // TODO: add error handling when no templateJSON exists
-        const response = await fetch("http://127.0.0.1:3000/ExportJson(1).json");
-        if (response.status === 200) {
-          const responseJSON = await response.json()
-          templateManager.importJSON(responseJSON);
-          console.log(responseJSON);
+        const importURL = document.querySelector("#bm-import-url-input").value;
+        if (!importURL) {
+          instance.handleDisplayStatus(`No import url provided!`);
+          return;
         }
-        console.log(templateManager.templatesJSON)
+        const response = await fetch(importURL);
+        if(!response){
+          instance.handleDisplayError(
+            "No data was found at given url, are you sure you inputted it correctly?"
+          );
+          return;
+        }
+        switch (response.status) {
+          case 200:
+            const responseJSON = await response.json();
+            templateManager.importJSON(responseJSON);
+            console.log(responseJSON);
+            break;
+          case 404:
+            instance.handleDisplayError(
+              "No data was found at given url, are you sure you inputted it correctly?"
+            );
+            break;
+          case 403:
+            instance.handleDisplayError("Access to the url location was denied by the url's host.");
+            break;
+          default:
+            instance.handleDisplayError("Unknown error occured during fetch of imported JSON!");
+            break;
+        }
+        console.log(templateManager.templatesJSON);
       };
     })
     .buildElement()

@@ -648,6 +648,7 @@ function buildOverlayMain() {
     })
     .buildElement()
     .buildElement()
+    .addHr({id: "bm-json-hr"}).buildElement()
     .addInput({ id: "bm-import-url-input", type: "text", placeholder: "URL to import from" })
     .buildElement()
     .addDiv({id: "bm-json-buttons"})

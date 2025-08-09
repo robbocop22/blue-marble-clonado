@@ -171,6 +171,10 @@ div:has(> #bm-button-teleport) {
   vertical-align: bottom;
 }
 
+#bm-json-hr{
+  margin: 7px 0;
+}
+
 #bm-json-buttons{
   display: flex;
   flex-direction: row;

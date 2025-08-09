@@ -693,15 +693,24 @@ function buildOverlayMain() {
     .addButton({ id: "bm-button-export", textContent: "Export JSON" }, (instance, button) => {
       button.onclick = () => {
         // TODO: add error handling when no templateJSON exists
-        console.log(instance.apiManager?.templateManager?.templatesJSON);
-        const anchor = document.createElement("a");
-        anchor.download = "ExportJson.json";
-        const jsonString = JSON.stringify(instance.apiManager?.templateManager?.templatesJSON);
-        const blob = new Blob([jsonString], { type: "application/json" });
-        const url = URL.createObjectURL(blob);
-        anchor.href = url;
-        anchor.click();
-        URL.revokeObjectURL(url);
+        if (!instance.apiManager?.templateManager?.templatesJSON){
+          instance.handleDisplayError("No templates are currently loaded!")
+          return;
+        }
+        try{
+          console.log(instance.apiManager?.templateManager?.templatesJSON);
+          const anchor = document.createElement("a");
+          anchor.download = "ExportJson.json";
+          const jsonString = JSON.stringify(instance.apiManager?.templateManager?.templatesJSON);
+          const blob = new Blob([jsonString], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          anchor.href = url;
+          anchor.click();
+          URL.revokeObjectURL(url);
+        }
+        catch(err){
+          instance.handleDisplayError("An error occurded while exporting the templates: ", err);
+        }
       };
     })
     .buildElement()

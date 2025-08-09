@@ -648,7 +648,8 @@ function buildOverlayMain() {
     })
     .buildElement()
     .buildElement()
-    .addInput({ id: "bm-import-url-input", type: "text", placeholder: "URL to import from" }).buildElement()
+    .addInput({ id: "bm-import-url-input", type: "text", placeholder: "URL to import from" })
+    .buildElement()
     .addButton({ id: "bm-button-import", textContent: "Import JSON" }, (instance, button) => {
       button.onclick = async () => {
         const importURL = document.querySelector("#bm-import-url-input").value;
@@ -657,58 +658,57 @@ function buildOverlayMain() {
           return;
         }
         const response = await fetch(importURL);
-        if(!response){
+        if (!response) { // Got no response from the fetched location, website at url likely doesn't exist
           instance.handleDisplayError(
             "No data was found at given url, are you sure you inputted it correctly?"
           );
           return;
         }
         switch (response.status) {
-          case 200:
+          case 200: // 200: OK, website returned a normal response
             const responseJSON = await response.json();
-            const res = await templateManager.importJSON(responseJSON);
-            console.log(res)
-            if (res)
+            if (await templateManager.importJSON(responseJSON))
               instance.handleDisplayStatus("Successfully imported template!");
             else
-              instance.handleDisplayError("An error occured when importing template, provided data may be malformed")
+              instance.handleDisplayError(
+                "An error occured when importing template, provided data may be malformed"
+              );
             console.log(responseJSON);
             break;
-          case 404:
+          case 404: // 404: NOT FOUND, the requested webpage doesn't exist
             instance.handleDisplayError(
               "No data was found at given url, are you sure you inputted it correctly?"
             );
             break;
-          case 403:
+          case 403: // 403: FORBIDDEN, the requested website disallowed access to the resource
             instance.handleDisplayError("Access to the url location was denied by the url's host.");
             break;
-          default:
+          case 401: // 401: UNAUTHORIZED, the requested required authorisation, which is missing
+            instance.handleDisplayError("Access to the url location was denied by the url's host.");
+            break;
+          default: // Any other status code
             instance.handleDisplayError("Unknown error occured during fetch of imported JSON!");
             break;
         }
-        console.log(templateManager.templatesJSON);
       };
     })
     .buildElement()
     .addButton({ id: "bm-button-export", textContent: "Export JSON" }, (instance, button) => {
       button.onclick = () => {
-        // TODO: add error handling when no templateJSON exists
-        if (!instance.apiManager?.templateManager?.templatesJSON){
-          instance.handleDisplayError("No templates are currently loaded!")
+        if (!instance.apiManager?.templateManager?.templatesJSON) {
+          instance.handleDisplayError("No templates are currently loaded!");
           return;
         }
-        try{
-          console.log(instance.apiManager?.templateManager?.templatesJSON);
-          const anchor = document.createElement("a");
-          anchor.download = "ExportJson.json";
+        try {
           const jsonString = JSON.stringify(instance.apiManager?.templateManager?.templatesJSON);
           const blob = new Blob([jsonString], { type: "application/json" });
-          const url = URL.createObjectURL(blob);
-          anchor.href = url;
-          anchor.click();
-          URL.revokeObjectURL(url);
-        }
-        catch(err){
+          const url = URL.createObjectURL(blob); // Create a web-accessible link for the templatesJSON resource (necessary for it to be downloaded)
+          const anchor = document.createElement("a");
+          anchor.download = "ExportJson.json"; // Default fileName of download file
+          anchor.href = url; // Set the resource / download link
+          anchor.click(); // Simulate clicking on a download link (starts the download)
+          URL.revokeObjectURL(url); // Free the URL from memory as it's unnecessary now
+        } catch (err) {
           instance.handleDisplayError("An error occurded while exporting the templates: ", err);
         }
       };

@@ -524,6 +524,19 @@ function buildOverlayMain() {
           }
         }).buildElement()
       .buildElement()
+      .addButton({'id': 'bm-button-export', 'textContent': 'Export JSON'}, (instance, button)=>{
+        button.onclick = () => {
+          console.log(instance.apiManager?.templateManager?.templatesJSON)
+          // const anchor = document.createElement('a');
+          // anchor.download = "ExportJson.json";
+          // const jsonString = JSON.stringify(instance.apiManager?.templateManager?.templatesJSON);
+          // const blob = new Blob([jsonString], { type: "application/json" });
+          // const url = URL.createObjectURL(blob)
+          // anchor.href = url;
+          // anchor.click();
+          // URL.revokeObjectURL(url);
+        }
+      }).buildElement()
       .addTextarea({'id': overlayMain.outputStatusId, 'placeholder': `Status: Sleeping...\nVersion: ${version}`, 'readOnly': true}).buildElement()
       .addDiv({'id': 'bm-contain-buttons-action'})
         .addDiv()

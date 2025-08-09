@@ -41,6 +41,7 @@ export default class Overlay {
     this.overlay = null; // The overlay root DOM HTMLElement
     this.currentParent = null; // The current parent HTMLElement in the overlay
     this.parentStack = []; // Tracks the parent elements BEFORE the currentParent so we can nest elements
+    this.colorToggleContainerId = 'bm-colors';
   }
 
   /** Populates the apiManager variable with the apiManager class.
@@ -125,11 +126,11 @@ export default class Overlay {
     this.parentStack = [];
   }
 
-  /** Adds a `div` to the overlay.
-   * This `div` element will have properties shared between all `div` elements in the overlay.
+  /** Adds a `<div>` to the overlay.
+   * This `<div>` element will have properties shared between all `<div>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `div` that are NOT shared between all overlay `div` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLDivElement):void} [callback=()=>{}] - Additional JS modification to the `div`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<div>` that are NOT shared between all overlay `<div>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLDivElement):void} [callback=()=>{}] - Additional JS modification to the `<div>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.2
    * @example
@@ -150,11 +151,64 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `p` to the overlay.
-   * This `p` element will have properties shared between all `p` elements in the overlay.
+  /** Builds color toggles UI for a template's colors. */
+  buildColorToggles(template, onToggle) {
+    const container = document.getElementById(this.colorToggleContainerId);
+    if (!container) { return; }
+    container.innerHTML = '';
+    // Ensure accordion exists and stays consistent
+    const details = document.getElementById('bm-colors-accordion');
+    if (details && !details.open) {
+      // Keep it collapsed if user hasn't opened it yet
+    }
+    // Show counts summary and an explicit hint to expand if needed
+    const summaryRow = document.createElement('div');
+    summaryRow.style.fontSize = '11px';
+    summaryRow.style.opacity = '0.9';
+    summaryRow.textContent = `Colors: ${template.colorsUsed.size}`;
+    container.appendChild(summaryRow);
+    const entries = Array.from(template.colorsUsed.entries());
+    entries.sort((a, b) => b[1] - a[1]);
+    for (const [key, count] of entries) {
+      const [r, g, b] = key.split(',').map(Number);
+      const row = document.createElement('div');
+      row.style.display = 'flex';
+      row.style.alignItems = 'center';
+      row.style.gap = '6px';
+      const swatch = document.createElement('span');
+      swatch.style.display = 'inline-block';
+      swatch.style.width = '12px';
+      swatch.style.height = '12px';
+      swatch.style.border = '1px solid #fff8';
+      swatch.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      const label = document.createElement('small');
+      label.textContent = `${key} (${new Intl.NumberFormat().format(count)})`;
+      const button = document.createElement('button');
+      const isEnabled = (template.activeColors == null) ? true : template.activeColors.has(key);
+      button.textContent = isEnabled ? 'Disable' : 'Enable';
+      button.style.padding = '0 6px';
+      button.style.fontSize = '10px';
+      button.addEventListener('click', () => {
+        if (template.activeColors == null) {
+          template.activeColors = new Set(template.colorsUsed.keys());
+        }
+        if (template.activeColors.has(key)) { template.activeColors.delete(key); } else { template.activeColors.add(key); }
+        const nowEnabled = template.activeColors.has(key);
+        button.textContent = nowEnabled ? 'Disable' : 'Enable';
+        onToggle?.(key, template.activeColors.has(key));
+      });
+      row.appendChild(swatch);
+      row.appendChild(label);
+      row.appendChild(button);
+      container.appendChild(row);
+    }
+  }
+
+  /** Adds a `<p>` to the overlay.
+   * This `<p>` element will have properties shared between all `<p>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `p` that are NOT shared between all overlay `p` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLParagraphElement):void} [callback=()=>{}] - Additional JS modification to the `p`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<p>` that are NOT shared between all overlay `<p>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLParagraphElement):void} [callback=()=>{}] - Additional JS modification to the `<p>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.2
    * @example
@@ -175,11 +229,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `small` to the overlay.
-   * This `small` element will have properties shared between all `small` elements in the overlay.
+  /** Adds a `<small>` to the overlay.
+   * This `<small>` element will have properties shared between all `<small>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `small` that are NOT shared between all overlay `small` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLParagraphElement):void} [callback=()=>{}] - Additional JS modification to the `small`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<small>` that are NOT shared between all overlay `<small>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLParagraphElement):void} [callback=()=>{}] - Additional JS modification to the `<small>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.55.8
    * @example
@@ -200,11 +254,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `img` to the overlay.
-   * This `img` element will have properties shared between all `img` elements in the overlay.
+  /** Adds a `<img>` to the overlay.
+   * This `<img>` element will have properties shared between all `<img>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `img` that are NOT shared between all overlay `img` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLImageElement):void} [callback=()=>{}] - Additional JS modification to the `img`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<img>` that are NOT shared between all overlay `<img>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLImageElement):void} [callback=()=>{}] - Additional JS modification to the `<img>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.2
    * @example
@@ -251,11 +305,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `hr` to the overlay.
-   * This `hr` element will have properties shared between all `hr` elements in the overlay.
+  /** Adds a `<hr>` to the overlay.
+   * This `<hr>` element will have properties shared between all `<hr>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `hr` that are NOT shared between all overlay `hr` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLHRElement):void} [callback=()=>{}] - Additional JS modification to the `hr`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<hr>` that are NOT shared between all overlay `<hr>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLHRElement):void} [callback=()=>{}] - Additional JS modification to the `<hr>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.7
    * @example
@@ -276,11 +330,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `br` to the overlay.
-   * This `br` element will have properties shared between all `br` elements in the overlay.
+  /** Adds a `<br>` to the overlay.
+   * This `<br>` element will have properties shared between all `<br>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `br` that are NOT shared between all overlay `br` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLBRElement):void} [callback=()=>{}] - Additional JS modification to the `br`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<br>` that are NOT shared between all overlay `<br>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLBRElement):void} [callback=()=>{}] - Additional JS modification to the `<br>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.11
    * @example
@@ -333,11 +387,11 @@ export default class Overlay {
     return this;
   }
   
-  /** Adds a `button` to the overlay.
-   * This `button` element will have properties shared between all `button` elements in the overlay.
+  /** Adds a `<button>` to the overlay.
+   * This `<button>` element will have properties shared between all `<button>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `button` that are NOT shared between all overlay `button` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLButtonElement):void} [callback=()=>{}] - Additional JS modification to the `button`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<button>` that are NOT shared between all overlay `<button>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLButtonElement):void} [callback=()=>{}] - Additional JS modification to the `<button>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.12
    * @example
@@ -360,10 +414,10 @@ export default class Overlay {
 
   /** Adds a help button to the overlay. It will have a "?" icon unless overridden in callback.
    * On click, the button will attempt to output the title to the output element (ID defined in Overlay constructor).
-   * This `button` element will have properties shared between all `button` elements in the overlay.
+   * This `<button>` element will have properties shared between all `<button>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `button` that are NOT shared between all overlay `button` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLButtonElement):void} [callback=()=>{}] - Additional JS modification to the `button`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<button>` that are NOT shared between all overlay `<button>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLButtonElement):void} [callback=()=>{}] - Additional JS modification to the `<button>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.12
    * @example
@@ -405,11 +459,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `input` to the overlay.
-   * This `input` element will have properties shared between all `input` elements in the overlay.
+  /** Adds a `<input>` to the overlay.
+   * This `<input>` element will have properties shared between all `<input>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `input` that are NOT shared between all overlay `input` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLInputElement):void} [callback=()=>{}] - Additional JS modification to the `input`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<input>` that are NOT shared between all overlay `<input>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLInputElement):void} [callback=()=>{}] - Additional JS modification to the `<input>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.13
    * @example
@@ -489,11 +543,11 @@ export default class Overlay {
     return this;
   }
 
-  /** Adds a `textarea` to the overlay.
-   * This `textarea` element will have properties shared between all `textarea` elements in the overlay.
+  /** Adds a `<textarea>` to the overlay.
+   * This `<textarea>` element will have properties shared between all `<textarea>` elements in the overlay.
    * You can override the shared properties by using a callback.
-   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `textarea` that are NOT shared between all overlay `textarea` elements. These should be camelCase.
-   * @param {function(Overlay, HTMLTextAreaElement):void} [callback=()=>{}] - Additional JS modification to the `textarea`.
+   * @param {Object.<string, any>} [additionalProperties={}] - The DOM properties of the `<textarea>` that are NOT shared between all overlay `<textarea>` elements. These should be camelCase.
+   * @param {function(Overlay, HTMLTextAreaElement):void} [callback=()=>{}] - Additional JS modification to the `<textarea>`.
    * @returns {Overlay} Overlay class instance (this)
    * @since 0.43.13
    * @example
@@ -516,7 +570,7 @@ export default class Overlay {
 
   /** Updates the inner HTML of the element.
    * The element is discovered by it's id.
-   * If the element is an `input`, it will modify the value attribute instead.
+   * If the element is an <input>, it will modify the value attribute instead.
    * @param {string} id - The ID of the element to change
    * @param {string} html - The HTML/text to update with
    * @param {boolean} [doSafe] - (Optional) Should `textContent` be used instead of `innerHTML` to avoid XSS? False by default

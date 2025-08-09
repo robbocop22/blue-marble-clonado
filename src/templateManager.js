@@ -59,7 +59,21 @@ export default class TemplateManager {
     this.templateState = ''; // The state of the template ('blob', 'proccessing', 'template', etc.)
     this.templatesArray = []; // All Template instnaces currently loaded (Template)
     this.templatesJSON = null; // All templates currently loaded (JSON)
-    this.templatesShouldBeDrawn = true; // Should ALL templates be drawn to the canvas?
+    this.templatesShouldBeDrawn = false; // Should ALL templates be drawn to the canvas? Disabled by default until enabled
+    this.activeColorFilter = new Set(); // 'r,g,b' keys to show in overlay (empty = show all)
+    // Performance helpers
+    this.debug = false; // Toggle verbose logging
+    this.statusThrottleMs = 250;
+    this._lastStatusAt = 0;
+    // Reusable canvases
+    this._analysisCanvas = null; // For base tile analysis at native resolution
+    this._analysisCtx = null;
+    this._drawCanvas = null; // For composing returned tile blobs
+    this._drawCtx = null;
+    // Aggregate index of all base tiles that have any template content
+    this.allTemplateTilesSet = new Set(); // Set of "TTTT,TTTT"
+    // Analysis mode: legacy (3x center sampling) to match historical counts
+    this.useLegacyCount = true;
   }
 
   /** Retrieves the pixel art canvas.
@@ -139,6 +153,9 @@ export default class TemplateManager {
     //template.chunked = await template.createTemplateTiles(this.tileSize); // Chunks the tiles
     const { templateTiles, templateTilesBuffers } = await template.createTemplateTiles(this.tileSize); // Chunks the tiles
     template.chunked = templateTiles; // Stores the chunked tile bitmaps
+    // Build fast indexes
+    template.buildTileIndex();
+    await template.buildCenterPixelIndex(this.drawMult);
 
     // Appends a child into the templates object
     // The child's name is the number of templates already in the list (sort order) plus the encoded player ID
@@ -151,12 +168,21 @@ export default class TemplateManager {
 
     this.templatesArray = []; // Remove this to enable multiple templates (2/2)
     this.templatesArray.push(template); // Pushes the Template object instance to the Template Array
+    // Build color toggles UI for this template (populate inside accordion)
+    if (template.activeColors == null) {
+      template.activeColors = null; // show all by default
+    }
+    this.overlay.buildColorToggles(template, () => {
+      this.overlay.handleDisplayStatus('Updated color filter.');
+    });
 
     // ==================== PIXEL COUNT DISPLAY SYSTEM ====================
     // Display pixel count statistics with internationalized number formatting
     // This provides immediate feedback to users about template complexity and size
+    // Reset placed counter and show initial progress 0/total
+    template.resetPlacedPixels?.();
     const pixelCountFormatted = new Intl.NumberFormat().format(template.pixelCount);
-    this.overlay.handleDisplayStatus(`Template created at ${coords.join(', ')}! Total pixels: ${pixelCountFormatted}`);
+    this.overlay.handleDisplayStatus(`Template created at ${coords.join(', ')}! Pixels done: 0/${pixelCountFormatted}\nWrong pixels: 0`);
 
     console.log(Object.keys(this.templatesJSON.templates).length);
     console.log(this.templatesJSON);
@@ -199,7 +225,7 @@ export default class TemplateManager {
   /** Draws all templates on the specified tile.
    * This method handles the rendering of template overlays on individual tiles.
    * @param {File} tileBlob - The pixels that are placed on a tile
-   * @param {Array<number>} tileCoords - The tile coordinates [x, y]
+   * @param {[number, number]} tileCoords - The tile coordinates [x, y]
    * @since 0.65.77
    */
   async drawTemplateOnTile(tileBlob, tileCoords) {
@@ -212,76 +238,206 @@ export default class TemplateManager {
     // Format tile coordinates with proper padding for consistent lookup
     tileCoords = tileCoords[0].toString().padStart(4, '0') + ',' + tileCoords[1].toString().padStart(4, '0');
 
-    console.log(`Searching for templates in tile: "${tileCoords}"`);
+    if (this.debug) { console.log(`Searching for templates in tile: "${tileCoords}"`); }
 
     const templateArray = this.templatesArray; // Stores a copy for sorting
-    console.log(templateArray);
+    if (this.debug) { console.log(templateArray); }
 
     // Sorts the array of Template class instances. 0 = first = lowest draw priority
     templateArray.sort((a, b) => {return a.sortID - b.sortID;});
 
-    console.log(templateArray);
+    if (this.debug) { console.log(templateArray); }
 
     // Retrieves the relavent template tile blobs
     const templatesToDraw = templateArray
       .map(template => {
-        const matchingTiles = Object.keys(template.chunked).filter(tile =>
-          tile.startsWith(tileCoords)
-        );
-
-        if (matchingTiles.length === 0) {return null;} // Return null when nothing is found
-
-        // Retrieves the blobs of the templates for this tile
-        const matchingTileBlobs = matchingTiles.map(tile => {
-
-          const coords = tile.split(','); // [x, y, x, y] Tile/pixel coordinates
-          
+        const keys = template.tileIndex?.get(tileCoords) || [];
+        if (keys.length === 0) { return null; }
+        const firstKey = keys[0];
+        const coords = firstKey.split(',');
           return {
-            bitmap: template.chunked[tile],
+          bitmap: template.chunked[firstKey],
             tileCoords: [coords[0], coords[1]],
             pixelCoords: [coords[2], coords[3]]
-          }
-        });
-
-        return matchingTileBlobs?.[0];
+        };
       })
     .filter(Boolean);
 
-    console.log(templatesToDraw);
+    if (this.debug) { console.log(templatesToDraw); }
 
     const templateCount = templatesToDraw?.length || 0; // Number of templates to draw on this tile
-    console.log(`templateCount = ${templateCount}`);
+    if (this.debug) { console.log(`templateCount = ${templateCount}`); }
 
     if (templateCount > 0) {
-      
-      // Calculate total pixel count for templates actively being displayed in this tile
-      const totalPixels = templateArray
-        .filter(template => {
-          // Filter templates to include only those with tiles matching current coordinates
-          // This ensures we count pixels only for templates actually being rendered
-          const matchingTiles = Object.keys(template.chunked).filter(tile =>
-            tile.startsWith(tileCoords)
-          );
-          return matchingTiles.length > 0;
-        })
-        .reduce((sum, template) => sum + (template.pixelCount || 0), 0);
-      
-      // Format pixel count with locale-appropriate thousands separators for better readability
-      // Examples: "1,234,567" (US), "1.234.567" (DE), "1 234 567" (FR)
-      const pixelCountFormatted = new Intl.NumberFormat().format(totalPixels);
-      
-      // Display status information about the templates being rendered
-      this.overlay.handleDisplayStatus(
-        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nTotal pixels: ${pixelCountFormatted}`
+      const baseBitmap = await createImageBitmap(tileBlob);
+      if (this.useLegacyCount) {
+        // Legacy counting: render base at 3x and sample centers exactly as before
+        const drawSizeLegacy = this.tileSize * this.drawMult;
+        if (!this._analysisCanvas) {
+          this._analysisCanvas = new OffscreenCanvas(drawSizeLegacy, drawSizeLegacy);
+          this._analysisCtx = this._analysisCanvas.getContext('2d', { willReadFrequently: true });
+          this._analysisCtx.imageSmoothingEnabled = false;
+        }
+        this._analysisCanvas.width = drawSizeLegacy;
+        this._analysisCanvas.height = drawSizeLegacy;
+        this._analysisCtx.clearRect(0, 0, drawSizeLegacy, drawSizeLegacy);
+        this._analysisCtx.drawImage(baseBitmap, 0, 0, drawSizeLegacy, drawSizeLegacy);
+        const baseImage = this._analysisCtx.getImageData(0, 0, drawSizeLegacy, drawSizeLegacy);
+
+        const [tileXStr, tileYStr] = tileCoords.split(',');
+        const tileXAbs = parseInt(tileXStr, 10);
+        const tileYAbs = parseInt(tileYStr, 10);
+
+        for (const template of templateArray) {
+          const matchingTiles = template.tileIndex?.get(tileCoords) || [];
+          if (matchingTiles.length === 0) { continue; }
+          for (const tileKey of matchingTiles) {
+            const coords = tileKey.split(',');
+            const pixelOffsetX = Number(coords[2]);
+            const pixelOffsetY = Number(coords[3]);
+            const bmp = template.chunked[tileKey];
+            const bmpWidth = bmp.width;
+            const bmpHeight = bmp.height;
+            const chunkWidthPx = Math.floor(bmpWidth / this.drawMult);
+            const chunkHeightPx = Math.floor(bmpHeight / this.drawMult);
+            // Read template colors by drawing the bitmap
+            const tplCanvas = new OffscreenCanvas(bmpWidth, bmpHeight);
+            const tplCtx = tplCanvas.getContext('2d', { willReadFrequently: true });
+            tplCtx.imageSmoothingEnabled = false;
+            tplCtx.clearRect(0, 0, bmpWidth, bmpHeight);
+            tplCtx.drawImage(bmp, 0, 0);
+            const tplImage = tplCtx.getImageData(0, 0, bmpWidth, bmpHeight);
+
+            for (let y = 0; y < chunkHeightPx; y++) {
+              for (let x = 0; x < chunkWidthPx; x++) {
+                const centerX = (pixelOffsetX + x) * this.drawMult + 1;
+                const centerY = (pixelOffsetY + y) * this.drawMult + 1;
+                const tplCenterX = x * this.drawMult + 1;
+                const tplCenterY = y * this.drawMult + 1;
+                const tplIdx = (tplCenterY * bmpWidth + tplCenterX) * 4;
+                const tplA = tplImage.data[tplIdx + 3];
+                if (tplA === 0) { continue; }
+                const baseIdx = (centerY * drawSizeLegacy + centerX) * 4;
+                const br = baseImage.data[baseIdx + 0];
+                const bg = baseImage.data[baseIdx + 1];
+                const bb = baseImage.data[baseIdx + 2];
+                const ba = baseImage.data[baseIdx + 3];
+                const tr = tplImage.data[tplIdx + 0];
+                const tg = tplImage.data[tplIdx + 1];
+                const tb = tplImage.data[tplIdx + 2];
+                const globalX = tileXAbs * this.tileSize + (pixelOffsetX + x);
+                const globalY = tileYAbs * this.tileSize + (pixelOffsetY + y);
+                const key = `${globalX},${globalY}`;
+                if (ba === 0) {
+                  if (template.placedPixelKeys.has(key)) { template.placedPixelKeys.delete(key); }
+                  if (template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.delete(key); }
+                  continue;
+                }
+                if (br === tr && bg === tg && bb === tb) {
+                  if (!template.placedPixelKeys.has(key)) { template.placedPixelKeys.add(key); }
+                  if (template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.delete(key); }
+                } else {
+                  if (!template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.add(key); }
+                  if (template.placedPixelKeys.has(key)) { template.placedPixelKeys.delete(key); }
+                }
+              }
+            }
+          }
+        }
+      } else {
+        // Optimized counting path at native resolution
+        if (!this._analysisCanvas) {
+          this._analysisCanvas = new OffscreenCanvas(this.tileSize, this.tileSize);
+          this._analysisCtx = this._analysisCanvas.getContext('2d', { willReadFrequently: true });
+          this._analysisCtx.imageSmoothingEnabled = false;
+        }
+        this._analysisCanvas.width = this.tileSize;
+        this._analysisCanvas.height = this.tileSize;
+        this._analysisCtx.clearRect(0, 0, this.tileSize, this.tileSize);
+        this._analysisCtx.drawImage(baseBitmap, 0, 0, this.tileSize, this.tileSize);
+        const baseImage = this._analysisCtx.getImageData(0, 0, this.tileSize, this.tileSize);
+        const basePacked = new Uint32Array(this.tileSize * this.tileSize);
+        {
+          const d = baseImage.data;
+          let di = 0;
+          for (let i = 0; i < basePacked.length; i++) {
+            const r = d[di];
+            const g = d[di + 1];
+            const b = d[di + 2];
+            const a = d[di + 3];
+            basePacked[i] = a === 0 ? 0 : ((r << 16) | (g << 8) | b);
+            di += 4;
+          }
+        }
+        const [tileXStr, tileYStr] = tileCoords.split(',');
+        const tileXAbs = parseInt(tileXStr, 10);
+        const tileYAbs = parseInt(tileYStr, 10);
+        for (const template of templateArray) {
+          const matchingTiles = template.tileIndex?.get(tileCoords) || [];
+          if (matchingTiles.length === 0) { continue; }
+          for (const tileKey of matchingTiles) {
+            const coords = tileKey.split(',');
+            const pixelOffsetX = Number(coords[2]);
+            const pixelOffsetY = Number(coords[3]);
+            const centerInfo = template.centerPixelIndex?.[tileKey];
+            if (!centerInfo) { continue; }
+            const { width: chunkWidthPx, height: chunkHeightPx, data: centerData } = centerInfo;
+            for (let y = 0; y < chunkHeightPx; y++) {
+              for (let x = 0; x < chunkWidthPx; x++) {
+                const dstX = pixelOffsetX + x;
+                const dstY = pixelOffsetY + y;
+                if (dstX < 0 || dstY < 0 || dstX >= this.tileSize || dstY >= this.tileSize) { continue; }
+                const baseVal = basePacked[dstY * this.tileSize + dstX];
+                const tplVal = centerData[y * chunkWidthPx + x];
+                if (tplVal === 0) { continue; }
+                const globalX = tileXAbs * this.tileSize + dstX;
+                const globalY = tileYAbs * this.tileSize + dstY;
+                const key = `${globalX},${globalY}`;
+                if (baseVal === 0) {
+                  if (template.placedPixelKeys.has(key)) { template.placedPixelKeys.delete(key); }
+                  if (template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.delete(key); }
+                  continue;
+                }
+                if (baseVal === tplVal) {
+                  if (!template.placedPixelKeys.has(key)) { template.placedPixelKeys.add(key); }
+                  if (template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.delete(key); }
+                } else {
+                  if (!template.wrongPixelKeys.has(key)) { template.wrongPixelKeys.add(key); }
+                  if (template.placedPixelKeys.has(key)) { template.placedPixelKeys.delete(key); }
+                }
+              }
+            }
+          }
+        }
+      }
+
+      // Sum up totals across templates for UI
+      const totalPlaced = templateArray.reduce((s, t) => s + (t.getPlacedPixelsCount ? t.getPlacedPixelsCount() : 0), 0);
+      const totalWrong = templateArray.reduce((s, t) => s + (t.getWrongPixelsCount ? t.getWrongPixelsCount() : 0), 0);
+      const totalPixels = templateArray.reduce((s, t) => s + (t.pixelCount || 0), 0);
+
+      const placedFormatted = new Intl.NumberFormat().format(totalPlaced);
+      const wrongFormatted = new Intl.NumberFormat().format(totalWrong);
+      const totalFormatted = new Intl.NumberFormat().format(totalPixels);
+
+      this.#throttledStatus(
+        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPixels done: ${placedFormatted}/${totalFormatted}\nWrong pixels: ${wrongFormatted}`
       );
     } else {
-      this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);
+      // When no templates affect this tile, return original blob untouched for speed
+      return tileBlob;
     }
     
     const tileBitmap = await createImageBitmap(tileBlob);
 
-    const canvas = new OffscreenCanvas(drawSize, drawSize);
-    const context = canvas.getContext('2d');
+    if (!this._drawCanvas) {
+      this._drawCanvas = new OffscreenCanvas(drawSize, drawSize);
+      this._drawCtx = this._drawCanvas.getContext('2d');
+    }
+    // Ensure size
+    this._drawCanvas.width = drawSize;
+    this._drawCanvas.height = drawSize;
+    const context = this._drawCtx;
 
     context.imageSmoothingEnabled = false; // Nearest neighbor
 
@@ -293,16 +449,59 @@ export default class TemplateManager {
     context.clearRect(0, 0, drawSize, drawSize); // Draws transparent background
     context.drawImage(tileBitmap, 0, 0, drawSize, drawSize);
 
-    // For each template in this tile, draw them.
-    for (const template of templatesToDraw) {
-      console.log(`Template:`);
-      console.log(template);
+      // For each template in this tile, draw them respecting color filter
+      for (const tpl of this.templatesArray) {
+        const keys = tpl.tileIndex?.get(tileCoords) || [];
+        for (const tileKey of keys) {
+          const bmp = tpl.chunked[tileKey];
+          const px = Number(tileKey.split(',')[2]);
+          const py = Number(tileKey.split(',')[3]);
+          // Semantics:
+          // - activeColors == null  => show all colors (no filter)
+          // - activeColors.size == 0 => show none
+          // - otherwise             => show only colors in the set
+          if (tpl.activeColors == null) {
+            context.drawImage(bmp, px * this.drawMult, py * this.drawMult);
+          } else if (tpl.activeColors.size === 0) {
+            continue;
+          } else {
+            // Draw filtered: mask out pixels not in active colors
+            const bw = bmp.width, bh = bmp.height;
+            const c = new OffscreenCanvas(bw, bh);
+            const ctx = c.getContext('2d', { willReadFrequently: true });
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(bmp, 0, 0);
+            const img = ctx.getImageData(0, 0, bw, bh);
+            for (let y = 1; y < bh; y += this.drawMult) {
+              for (let x = 1; x < bw; x += this.drawMult) {
+                const idx = (y * bw + x) * 4;
+                const a = img.data[idx + 3];
+                if (a === 0) { continue; }
+                const r = img.data[idx + 0];
+                const g = img.data[idx + 1];
+                const b = img.data[idx + 2];
+                const key = `${r},${g},${b}`;
+                if (tpl.activeColors && !tpl.activeColors.has(key)) {
+                  // Blank the 3x3 block around the center
+                  for (let dy = -1; dy <= 1; dy++) {
+                    for (let dx = -1; dx <= 1; dx++) {
+                      const xx = x + dx;
+                      const yy = y + dy;
+                      if (xx < 0 || yy < 0 || xx >= bw || yy >= bh) { continue; }
+                      const ii = (yy * bw + xx) * 4;
+                      img.data[ii + 3] = 0;
+                    }
+                  }
+                }
+              }
+            }
+            ctx.putImageData(img, 0, 0);
+            context.drawImage(c, px * this.drawMult, py * this.drawMult);
+          }
+        }
+      }
 
-      // Draws the each template on the tile based on it's relative position
-      context.drawImage(template.bitmap, Number(template.pixelCoords[0]) * this.drawMult, Number(template.pixelCoords[1]) * this.drawMult);
-    }
-
-    return await canvas.convertToBlob({ type: 'image/png' });
+    return await this._drawCanvas.convertToBlob({ type: 'image/png' });
   }
 
   /** Imports the JSON object, and appends it to any JSON object already loaded
@@ -369,6 +568,26 @@ export default class TemplateManager {
             //coords: coords
           });
           template.chunked = templateTiles;
+          // Build fast indexes for imported templates
+          template.buildTileIndex();
+          await template.buildCenterPixelIndex(this.drawMult);
+          for (const tileXY of template.tileIndex.keys()) {
+            this.allTemplateTilesSet.add(tileXY);
+          }
+          // Compute total pixel count from chunked bitmaps if not provided
+          try {
+            let computedTotalPixels = 0;
+            for (const key in templateTiles) {
+              if (!Object.prototype.hasOwnProperty.call(templateTiles, key)) { continue; }
+              const bmp = templateTiles[key];
+              const chunkWidthPx = Math.floor(bmp.width / this.drawMult);
+              const chunkHeightPx = Math.floor(bmp.height / this.drawMult);
+              computedTotalPixels += chunkWidthPx * chunkHeightPx;
+            }
+            template.pixelCount = computedTotalPixels;
+          } catch (e) {
+            console.warn('Failed to compute template pixel count from chunked tiles:', e);
+          }
           this.templatesArray.push(template);
           console.log(this.templatesArray);
           console.log(`^^^ This ^^^`);
@@ -389,5 +608,14 @@ export default class TemplateManager {
    */
   setTemplatesShouldBeDrawn(value) {
     this.templatesShouldBeDrawn = value;
+  }
+
+  /** Throttles frequent status updates to reduce DOM churn */
+  #throttledStatus(text) {
+    const now = performance.now();
+    if (now - this._lastStatusAt >= this.statusThrottleMs) {
+      this._lastStatusAt = now;
+      this.overlay.handleDisplayStatus(text);
+    }
   }
 }

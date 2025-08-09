@@ -13,7 +13,7 @@ export default class Template {
    * @param {string} [params.authorID=''] - The user ID of the person who exported the template (prevents sort ID collisions)
    * @param {string} [params.url=''] - The URL to the source image
    * @param {File} [params.file=null] - The template file (pre-processed File or processed bitmap)
-   * @param {Array<number>} [params.coords=null] - The coordinates of the top left corner as (tileX, tileY, pixelX, pixelY)
+   * @param {[number, number, number, number]} [params.coords=null] - The coordinates of the top left corner as (tileX, tileY, pixelX, pixelY)
    * @param {Object} [params.chunked=null] - The affected chunks of the template, and their template for each chunk
    * @param {number} [params.tileSize=1000] - The size of a tile in pixels (assumes square tiles)
    * @param {number} [params.pixelCount=0] - Total number of pixels in the template (calculated automatically during processing)
@@ -38,6 +38,33 @@ export default class Template {
     this.chunked = chunked;
     this.tileSize = tileSize;
     this.pixelCount = 0; // Total pixel count in template
+    this.placedPixelKeys = new Set(); // Tracks unique placed pixels (global, scaled coords)
+    this.wrongPixelKeys = new Set(); // Tracks unique wrong pixels (global, scaled coords)
+    this.colorsUsed = new Map(); // 'r,g,b' -> count of pixels in template
+    this.activeColors = new Set(); // Set of 'r,g,b' keys currently enabled for overlay display
+    // Indexed lookups for performance
+    this.centerPixelIndex = {}; // tileKey -> { width, height, data: Uint32Array (24-bit RGB; 0 = transparent) }
+    this.tileIndex = new Map(); // "TTTT,TTTT" -> [tileKeys]
+  }
+
+  /** Clears the tracked placed pixels for this template. */
+  resetPlacedPixels() {
+    this.placedPixelKeys.clear();
+  }
+
+  /** Returns the number of placed pixels accounted for this template. */
+  getPlacedPixelsCount() {
+    return this.placedPixelKeys.size;
+  }
+
+  /** Clears the tracked wrong pixels for this template. */
+  resetWrongPixels() {
+    this.wrongPixelKeys.clear();
+  }
+
+  /** Returns the number of wrong pixels accounted for this template. */
+  getWrongPixelsCount() {
+    return this.wrongPixelKeys.size;
   }
 
   /** Creates chunks of the template for each tile.
@@ -128,18 +155,20 @@ export default class Template {
         for (let y = 0; y < canvasHeight; y++) {
           for (let x = 0; x < canvasWidth; x++) {
             // For every pixel...
-
-            // ... Make it transparent unless it is the "center"
-            if (x % shreadSize !== 1 || y % shreadSize !== 1) {
-              const pixelIndex = (y * canvasWidth + x) * 4; // Find the pixel index in an array where every 4 indexes are 1 pixel
-              imageData.data[pixelIndex + 3] = 0; // Make the pixel transparent on the alpha channel
-
-              // if (!!imageData.data[pixelIndex + 3]) {
-              //   imageData.data[pixelIndex + 3] = 50; // Alpha
-              //   imageData.data[pixelIndex] = 30; // Red
-              //   imageData.data[pixelIndex + 1] = 30; // Green
-              //   imageData.data[pixelIndex + 2] = 30; // Blue
-              // }
+            const pixelIndex = (y * canvasWidth + x) * 4;
+            const isCenter = (x % shreadSize === 1 && y % shreadSize === 1);
+            if (isCenter) {
+              const a = imageData.data[pixelIndex + 3];
+              if (a !== 0) {
+                const r = imageData.data[pixelIndex + 0];
+                const g = imageData.data[pixelIndex + 1];
+                const b = imageData.data[pixelIndex + 2];
+                const key = `${r},${g},${b}`;
+                this.colorsUsed.set(key, (this.colorsUsed.get(key) || 0) + 1);
+              }
+            } else {
+              // Make non-center transparent
+              imageData.data[pixelIndex + 3] = 0;
             }
           }
         }
@@ -166,6 +195,39 @@ export default class Template {
 
         console.log(templateTiles);
 
+        // ==================== BUILD INDEXES (CENTER PIXELS + TILE KEYS) ====================
+        // Build center-pixel RGBA index for this chunk once
+        const chunkWidthPx = Math.floor(canvasWidth / shreadSize);
+        const chunkHeightPx = Math.floor(canvasHeight / shreadSize);
+        const centerData = new Uint32Array(chunkWidthPx * chunkHeightPx);
+        // Reuse existing imageData; sample only center positions
+        for (let yy = 0; yy < chunkHeightPx; yy++) {
+          for (let xx = 0; xx < chunkWidthPx; xx++) {
+            const cx = xx * shreadSize + 1;
+            const cy = yy * shreadSize + 1;
+            const srcIdx = (cy * canvasWidth + cx) * 4;
+            const a = imageData.data[srcIdx + 3];
+            if (a === 0) {
+              centerData[yy * chunkWidthPx + xx] = 0;
+            } else {
+              const r = imageData.data[srcIdx + 0];
+              const g = imageData.data[srcIdx + 1];
+              const b = imageData.data[srcIdx + 2];
+              centerData[yy * chunkWidthPx + xx] = (r << 16) | (g << 8) | b;
+            }
+          }
+        }
+        this.centerPixelIndex[templateTileName] = {
+          width: chunkWidthPx,
+          height: chunkHeightPx,
+          data: centerData
+        };
+        // Update tileIndex mapping for quick retrieval by base tile coords
+        const tileXY = templateTileName.split(',').slice(0, 2).join(',');
+        const list = this.tileIndex.get(tileXY) || [];
+        list.push(templateTileName);
+        this.tileIndex.set(tileXY, list);
+
         pixelX += drawSizeX;
       }
 
@@ -174,6 +236,63 @@ export default class Template {
 
     console.log('Template Tiles: ', templateTiles);
     console.log('Template Tiles Buffers: ', templateTilesBuffers);
+    // Initialize activeColors to include all discovered colors
+    for (const key of this.colorsUsed.keys()) {
+      this.activeColors.add(key);
+    }
     return { templateTiles, templateTilesBuffers };
+  }
+
+  /** Builds a fast index from existing chunked bitmaps mapping base tile -> chunk keys. */
+  buildTileIndex() {
+    this.tileIndex = new Map();
+    if (!this.chunked) { return; }
+    for (const key of Object.keys(this.chunked)) {
+      const tileXY = key.split(',').slice(0, 2).join(',');
+      if (!this.tileIndex.has(tileXY)) { this.tileIndex.set(tileXY, []); }
+      this.tileIndex.get(tileXY).push(key);
+    }
+  }
+
+  /** Builds center-pixel RGBA index for each chunk from the existing bitmaps. */
+  async buildCenterPixelIndex(drawMult = 3) {
+    this.centerPixelIndex = {};
+    this.colorsUsed = new Map();
+    if (!this.chunked) { return; }
+    for (const key of Object.keys(this.chunked)) {
+      const bmp = this.chunked[key];
+      const bmpWidth = bmp.width;
+      const bmpHeight = bmp.height;
+      const chunkWidthPx = Math.floor(bmpWidth / drawMult);
+      const chunkHeightPx = Math.floor(bmpHeight / drawMult);
+      const canvas = new OffscreenCanvas(bmpWidth, bmpHeight);
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, bmpWidth, bmpHeight);
+      ctx.drawImage(bmp, 0, 0);
+      const tplImage = ctx.getImageData(0, 0, bmpWidth, bmpHeight);
+      const centerData = new Uint32Array(chunkWidthPx * chunkHeightPx);
+      for (let y = 0; y < chunkHeightPx; y++) {
+        for (let x = 0; x < chunkWidthPx; x++) {
+          const cx = x * drawMult + 1;
+          const cy = y * drawMult + 1;
+          const srcIdx = (cy * bmpWidth + cx) * 4;
+          const a = tplImage.data[srcIdx + 3];
+          if (a === 0) {
+            centerData[y * chunkWidthPx + x] = 0;
+          } else {
+            const r = tplImage.data[srcIdx + 0];
+            const g = tplImage.data[srcIdx + 1];
+            const b = tplImage.data[srcIdx + 2];
+            centerData[y * chunkWidthPx + x] = (r << 16) | (g << 8) | b;
+            const key = `${r},${g},${b}`;
+            this.colorsUsed.set(key, (this.colorsUsed.get(key) || 0) + 1);
+          }
+        }
+      }
+      this.centerPixelIndex[key] = { width: chunkWidthPx, height: chunkHeightPx, data: centerData };
+    }
+    // Refresh activeColors to include all colors by default
+    this.activeColors = new Set(this.colorsUsed.keys());
   }
 }

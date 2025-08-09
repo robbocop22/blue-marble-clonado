@@ -99,8 +99,14 @@ inject(() => {
         .catch(err => {
           console.error(`%c${name}%c: Failed to parse JSON: `, consoleStyle, '', err);
         });
-    } else if (contentType.includes('image/') && (!endpointName.includes('openfreemap') && !endpointName.includes('maps'))) {
-      // Fetch custom for all images but opensourcemap
+    } else if (contentType.includes('image/')) {
+      // Intercept ONLY game tile images; pass through all other images
+      const urlStr = typeof endpointName === 'string' ? endpointName : String(endpointName || '');
+      const isGameTilePng = (/\/files\/s\d+\/tiles\//.test(urlStr) && /\.png(\?|$)/.test(urlStr));
+      if (!isGameTilePng) {
+        return response;
+      }
+      // Fetch custom for tile images. Non-covered tiles are fast-pathed in template manager.
 
       const blink = Date.now(); // Current time
 
@@ -174,12 +180,11 @@ document.head?.appendChild(stylesheetLink);
 
 // CONSTRUCTORS
 const observers = new Observers(); // Constructs a new Observers object
-const overlayMain = new Overlay(name, version); // Constructs a new Overlay object for the main overlay
-const overlayTabTemplate = new Overlay(name, version); // Constructs a Overlay object for the template tab
-const templateManager = new TemplateManager(name, version, overlayMain); // Constructs a new TemplateManager object
+const overlay = new Overlay(name, version); // Constructs a new Overlay object
+const templateManager = new TemplateManager(name, version, overlay); // Constructs a new TemplateManager object
 const apiManager = new ApiManager(templateManager); // Constructs a new ApiManager object
 
-overlayMain.setApiManager(apiManager); // Sets the API manager
+overlay.setApiManager(apiManager); // Sets the API manager
 
 const storageTemplates = JSON.parse(GM_getValue('bmTemplates', '{}'));
 console.log(storageTemplates);
@@ -187,9 +192,17 @@ templateManager.importJSON(storageTemplates); // Loads the templates
 
 buildOverlayMain(); // Builds the main overlay
 
-overlayMain.handleDrag('#bm-overlay', '#bm-bar-drag'); // Creates dragging capability on the drag bar for dragging the overlay
+overlay.handleDrag('#bm-overlay', '#bm-bar-drag'); // Creates dragging capability on the drag bar for dragging the overlay
 
-apiManager.spontaneousResponseListener(overlayMain); // Reads spontaneous fetch responces
+apiManager.spontaneousResponseListener(overlay); // Reads spontaneous fetch responces
+
+// Populate colors list if a template is already loaded from storage
+try {
+  const firstTemplate = templateManager?.templatesArray?.[0];
+  if (firstTemplate) {
+    overlay.buildColorToggles(firstTemplate, () => overlay.handleDisplayStatus('Updated color filter.'));
+  }
+} catch {}
 
 observeBlack(); // Observes the black palette color
 
@@ -243,7 +256,7 @@ function observeBlack() {
 function buildOverlayMain() {
   let isMinimized = false; // Overlay state tracker (false = maximized, true = minimized)
   
-  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
+  overlay.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
     .addDiv({'id': 'bm-contain-header'})
       .addDiv({'id': 'bm-bar-drag'}).buildElement()
       .addImg({'alt': 'Blue Marble Icon - Click to minimize/maximize', 'src': 'https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/assets/Favicon.png', 'style': 'cursor: pointer;'}, 
@@ -483,6 +496,60 @@ function buildOverlayMain() {
         .addInput({'type': 'number', 'id': 'bm-input-px', 'placeholder': 'Px X', 'min': 0, 'max': 2047, 'step': 1, 'required': true}).buildElement()
         .addInput({'type': 'number', 'id': 'bm-input-py', 'placeholder': 'Px Y', 'min': 0, 'max': 2047, 'step': 1, 'required': true}).buildElement()
       .buildElement()
+      .addDiv({}, (instance, host) => {
+        const details = document.createElement('details');
+        details.id = 'bm-colors-accordion';
+        details.open = false;
+        const summary = document.createElement('summary');
+        summary.textContent = 'Colors (enable/disable)';
+        const controls = document.createElement('div');
+        controls.style.display = 'flex';
+        controls.style.gap = '6px';
+        controls.style.margin = '4px 0';
+        const btnEnableAll = document.createElement('button');
+        btnEnableAll.textContent = 'Enable all';
+        btnEnableAll.style.padding = '0 8px';
+        btnEnableAll.style.fontSize = '10px';
+        btnEnableAll.addEventListener('click', () => {
+          const tm = instance.apiManager?.templateManager;
+          const tpl = tm?.templatesArray?.[0];
+          if (!tpl) { return; }
+          tpl.activeColors = null; // null => show all colors
+          instance.buildColorToggles(tpl, () => instance.handleDisplayStatus('Updated color filter.'));
+          instance.handleDisplayStatus('Enabled all colors');
+        });
+        const btnDisableAll = document.createElement('button');
+        btnDisableAll.textContent = 'Disable all';
+        btnDisableAll.style.padding = '0 8px';
+        btnDisableAll.style.fontSize = '10px';
+        btnDisableAll.addEventListener('click', () => {
+          const tm = instance.apiManager?.templateManager;
+          const tpl = tm?.templatesArray?.[0];
+          if (!tpl) { return; }
+          tpl.activeColors = new Set();
+          instance.buildColorToggles(tpl, () => instance.handleDisplayStatus('Updated color filter.'));
+          instance.handleDisplayStatus('Disabled all colors');
+        });
+        controls.appendChild(btnEnableAll);
+        controls.appendChild(btnDisableAll);
+        const container = document.createElement('div');
+        container.id = 'bm-colors';
+        container.style = 'margin-top: 0.25em; display: grid; gap: 4px; grid-auto-rows: minmax(20px, auto);';
+        details.appendChild(summary);
+        details.appendChild(controls);
+        details.appendChild(container);
+        host.appendChild(details);
+
+        // Populate colors list when the accordion is opened
+        details.addEventListener('toggle', () => {
+          if (!details.open) { return; }
+          const tm = instance.apiManager?.templateManager;
+          const tpl = tm?.templatesArray?.[0];
+          if (!tpl) { return; }
+          instance.buildColorToggles(tpl, () => instance.handleDisplayStatus('Updated color filter.'));
+        });
+      })
+      .buildElement()
       .addInputFile({'id': 'bm-input-file-template', 'textContent': 'Upload Template', 'accept': 'image/png, image/jpeg, image/webp, image/bmp, image/gif'}).buildElement()
       .addDiv({'id': 'bm-contain-buttons-template'})
         .addButton({'id': 'bm-button-enable', 'textContent': 'Enable'}, (instance, button) => {
@@ -524,7 +591,7 @@ function buildOverlayMain() {
           }
         }).buildElement()
       .buildElement()
-      .addTextarea({'id': overlayMain.outputStatusId, 'placeholder': `Status: Sleeping...\nVersion: ${version}`, 'readOnly': true}).buildElement()
+      .addTextarea({'id': overlay.outputStatusId, 'placeholder': `Status: Sleeping...\nVersion: ${version}`, 'readOnly': true}).buildElement()
       .addDiv({'id': 'bm-contain-buttons-action'})
         .addDiv()
           // .addButton({'id': 'bm-button-teleport', 'className': 'bm-help', 'textContent': '✈'}).buildElement()
@@ -541,28 +608,4 @@ function buildOverlayMain() {
       .buildElement()
     .buildElement()
   .buildOverlay(document.body);
-}
-
-function buildOverlayTabTemplate() {
-  overlayTabTemplate.addDiv({'id': 'bm-tab-template', 'style': 'top: 20%; left: 10%;'})
-      .addDiv()
-        .addDiv({'className': 'bm-dragbar'}).buildElement()
-        .addButton({'className': 'bm-button-minimize', 'textContent': '↑'},
-          (instance, button) => {
-            button.onclick = () => {
-              let isMinimized = false;
-              if (button.textContent == '↑') {
-                button.textContent = '↓';
-              } else {
-                button.textContent = '↑';
-                isMinimized = true;
-              }
-
-              
-            }
-          }
-        ).buildElement()
-      .buildElement()
-    .buildElement()
-  .buildOverlay();
 }

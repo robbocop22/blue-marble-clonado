@@ -172,6 +172,7 @@ div:has(> #bm-button-teleport) {
 }
 
 #bm-import-url-input{
+  margin: 0 5px;
   border-radius: 30px;
   font-size: small;
   padding: 0.5ch;

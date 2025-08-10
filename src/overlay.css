@@ -171,6 +171,29 @@ div:has(> #bm-button-teleport) {
   vertical-align: bottom;
 }
 
+#bm-json-hr{
+  margin: 7px 0;
+}
+
+#bm-json-buttons{
+  display: flex;
+  flex-direction: row;
+  gap: 1.6ch;
+  align-items: center;
+  width: 100%;
+}
+
+#bm-import-url-input{
+  margin: 5px 0;
+  border-radius: 30px;
+  font-size: small;
+  padding: 0.5ch;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+
+
 /* Tile (x, y) & Pixel (x, y) input fields */
 #bm-contain-coords input[type="number"] {
   appearance: auto;

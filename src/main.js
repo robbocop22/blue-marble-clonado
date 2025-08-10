@@ -486,7 +486,7 @@ function buildOverlayMain() {
       .addInputFile({'id': 'bm-input-file-template', 'textContent': 'Upload Template', 'accept': 'image/png, image/jpeg, image/webp, image/bmp, image/gif'}, (_,__,input,___) => {
           input.addEventListener('change', (e) => {
               const file = e.target.files[0];
-              const coordsMatch = file.name.match(/.*\D(\d+)\D+(\d+)\D+(\d+)\D+(\d+).*?/);
+              const coordsMatch = file.name.match(/(?:.*\D)?(\d+)\D+(\d+)\D+(\d+)\D+(\d+).*?/);
               if (coordsMatch) {
                   document.querySelector('#bm-input-tx').value = coordsMatch[1];
                   document.querySelector('#bm-input-ty').value = coordsMatch[2];

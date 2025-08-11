@@ -42,12 +42,12 @@
 </table>
 
 <h1>Blue Marble</h1>
-<a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer"><img alt="Site Web Officiel" src="https://img.shields.io/badge/Site_Web_Officiel-Blue_Marble-blue?style=flat&logo=globe&logoColor=white"></a>
 <a href="https://wplacestatus.sobakintech.xyz" target="_blank" rel="noopener noreferrer"><img alt="Wplace Status" src="https://wplacestatus.sobakintech.xyz/api/badge/15/status"></a>
 <a href="" target="_blank" rel="noopener noreferrer"><img alt="Latest Version" src="https://img.shields.io/badge/Latest_Version-0.80.0-lightblue?style=flat"></a>
 <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/releases" target="_blank" rel="noopener noreferrer"><img alt="Latest Release" src="https://img.shields.io/github/v/release/SwingTheVine/Wplace-BlueMarble?sort=semver&style=flat&label=Latest%20Release&color=blue"></a>
 <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/LICENSE.txt" target="_blank" rel="noopener noreferrer"><img alt="Software License: MPL-2.0" src="https://img.shields.io/badge/Software_License-MPL--2.0-slateblue?style=flat"></a>
 <a href="https://discord.gg/tpeBPy46hf" target="_blank" rel="noopener noreferrer"><img alt="Contact Me" src="https://img.shields.io/badge/Contact_Me-gray?style=flat&logo=Discord&logoColor=white&logoSize=auto&labelColor=cornflowerblue"></a>
+<a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer"><img alt="Blue Marble Website" src="https://img.shields.io/badge/Official_Website-Camille_Daguin-blue?style=flat&logo=globe&logoColor=white"></a>
 <a href="" target="_blank" rel="noopener noreferrer"><img alt="WakaTime" src="https://img.shields.io/badge/Coding_Time-111hrs_12mins-blue?style=flat&logo=wakatime&logoColor=black&logoSize=auto&labelColor=white"></a>
 <a href="" target="_blank" rel="noopener noreferrer"><img alt="Total Patches" src="https://img.shields.io/badge/Total_Patches-494-black?style=flat"></a>
 <a href="" target="_blank" rel="noopener noreferrer"><img alt="Total Lines of Code" src="https://tokei.rs/b1/github/SwingTheVine/Wplace-BlueMarble?category=code"></a>

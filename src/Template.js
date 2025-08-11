@@ -156,6 +156,7 @@ export default class Template {
         for (let y = 0; y < canvasHeight; y++) {
           for (let x = 0; x < canvasWidth; x++) {
             // For every pixel...
+
             const pixelIndex = (y * canvasWidth + x) * 4;
             const isCenter = (x % shreadSize === 1 && y % shreadSize === 1);
             if (isCenter) {
@@ -170,6 +171,7 @@ export default class Template {
             } else {
               // Make non-center transparent
               imageData.data[pixelIndex + 3] = 0;
+
             }
           }
         }

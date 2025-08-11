@@ -42,6 +42,7 @@
 </table>
 
 <h1>Blue Marble</h1>
+<a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer"><img alt="Site Web Officiel" src="https://img.shields.io/badge/Site_Web_Officiel-Blue_Marble-blue?style=flat&logo=globe&logoColor=white"></a>
 <a href="https://wplacestatus.sobakintech.xyz" target="_blank" rel="noopener noreferrer"><img alt="Wplace Status" src="https://wplacestatus.sobakintech.xyz/api/badge/15/status"></a>
 <a href="" target="_blank" rel="noopener noreferrer"><img alt="Latest Version" src="https://img.shields.io/badge/Latest_Version-0.80.0-lightblue?style=flat"></a>
 <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/releases" target="_blank" rel="noopener noreferrer"><img alt="Latest Release" src="https://img.shields.io/github/v/release/SwingTheVine/Wplace-BlueMarble?sort=semver&style=flat&label=Latest%20Release&color=blue"></a>
@@ -62,6 +63,12 @@
 <h2>Quick Guide</h2>
 <p>
   Press the arrows to reveal the option you want.
+  <details>
+    <summary>
+      <b>I want to visit the official Blue Marble website.</b> <sup>(Click to Expand)</sup>
+    </summary>
+    <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">Click here</a> to visit the official Blue Marble website.
+  </details>
   <details>
     <summary>
       <b>I want to download Blue Marble.</b> <sup>(Click to Expand)</sup>
@@ -106,7 +113,7 @@
     <li>Allowing you to use the eyedropper on the template image, provided the colors are correct</li>
     <li>...and more!</li>
   </ul>
-  If you like this userscript, please ⭐ the repository! If you wish to contribute to Blue Marble, check out the <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md</a> file in <code>docs/</code>.
+  If you like this userscript, please ⭐ the repository! For more information and updates, visit the <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">official Blue Marble website</a>. If you wish to contribute to Blue Marble, check out the <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md</a> file in <code>docs/</code>.
 
   <img alt="Showcase image of Blue Marble template" src="./assets/Showcase1.png">
 

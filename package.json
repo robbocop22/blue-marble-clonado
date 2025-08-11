@@ -2,6 +2,11 @@
   "name": "wplace-bluemarble",
   "version": "0.80.0",
   "type": "module",
+  "homepage": "https://bluemarble.camilledaguin.fr/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SwingTheVine/Wplace-BlueMarble.git"
+  },
   "scripts": {
     "build": "node build/build.js",
     "patch": "node build/patch.js && npm run build"

@@ -65,12 +65,6 @@
   Press the arrows to reveal the option you want.
   <details>
     <summary>
-      <b>I want to visit the official Blue Marble website.</b> <sup>(Click to Expand)</sup>
-    </summary>
-    <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">Click here</a> to visit the official Blue Marble website.
-  </details>
-  <details>
-    <summary>
       <b>I want to download Blue Marble.</b> <sup>(Click to Expand)</sup>
     </summary>
     <a href="#installation-instructions">Click here</a> to view the installation instructions.
@@ -101,6 +95,12 @@
     </summary>
     <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/CONTRIBUTING.md">Click here</a> to read the contributing guidelines.
   </details>
+  <details>
+    <summary>
+      <b>I want to visit the website.</b> <sup>(Click to Expand)</sup>
+    </summary>
+    <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">Click here</a> to visit the official Blue Marble website.
+  </details>
 </p>
 
 <h2>Overview</h2>
@@ -113,7 +113,7 @@
     <li>Allowing you to use the eyedropper on the template image, provided the colors are correct</li>
     <li>...and more!</li>
   </ul>
-  If you like this userscript, please ⭐ the repository! For more information and updates, visit the <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">official Blue Marble website</a>. If you wish to contribute to Blue Marble, check out the <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md</a> file in <code>docs/</code>.
+  If you like this userscript, please ⭐ the repository! For more information and updates, visit the <a href="https://bluemarble.camilledaguin.fr/" target="_blank" rel="noopener noreferrer">Blue Marble website</a>. If you wish to contribute to Blue Marble, check out the <a href="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/CONTRIBUTING.md" target="_blank" rel="noopener noreferrer">CONTRIBUTING.md</a> file in <code>docs/</code>.
 
   <img alt="Showcase image of Blue Marble template" src="./assets/Showcase1.png">
 

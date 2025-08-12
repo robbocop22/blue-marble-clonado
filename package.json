@@ -1,6 +1,6 @@
 {
   "name": "wplace-bluemarble",
-  "version": "0.76.0",
+  "version": "0.80.0",
   "type": "module",
   "scripts": {
     "build": "node build/build.js",
@@ -9,7 +9,8 @@
   "devDependencies": {
     "esbuild": "^0.25.0",
     "jsdoc": "^4.0.4",
-    "terser": "^5.43.1",
+    "minami": "^1.2.3",
+    "terser": "^5.43.1"
     "@types/tampermonkey": "^5.0.4"
   }
 }

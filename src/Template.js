@@ -2,6 +2,7 @@ import { uint8ToBase64 } from "./utils";
 
 /** An instance of a template.
  * Handles all mathematics, manipulation, and analysis regarding a single template.
+ * @class Template
  * @since 0.65.2
  */
 export default class Template {
@@ -13,7 +14,7 @@ export default class Template {
    * @param {string} [params.authorID=''] - The user ID of the person who exported the template (prevents sort ID collisions)
    * @param {string} [params.url=''] - The URL to the source image
    * @param {File} [params.file=null] - The template file (pre-processed File or processed bitmap)
-   * @param {[number, number, number, number]} [params.coords=null] - The coordinates of the top left corner as (tileX, tileY, pixelX, pixelY)
+   * @param {Array<number>} [params.coords=null] - The coordinates of the top left corner as (tileX, tileY, pixelX, pixelY)
    * @param {Object} [params.chunked=null] - The affected chunks of the template, and their template for each chunk
    * @param {number} [params.tileSize=1000] - The size of a tile in pixels (assumes square tiles)
    * @param {number} [params.pixelCount=0] - Total number of pixels in the template (calculated automatically during processing)
@@ -128,18 +129,23 @@ export default class Template {
         for (let y = 0; y < canvasHeight; y++) {
           for (let x = 0; x < canvasWidth; x++) {
             // For every pixel...
-
-            // ... Make it transparent unless it is the "center"
-            if (x % shreadSize !== 1 || y % shreadSize !== 1) {
-              const pixelIndex = (y * canvasWidth + x) * 4; // Find the pixel index in an array where every 4 indexes are 1 pixel
+            const pixelIndex = (y * canvasWidth + x) * 4; // Find the pixel index in an array where every 4 indexes are 1 pixel
+            // If the pixel is the color #deface, draw a translucent gray checkerboard pattern
+            if (
+              imageData.data[pixelIndex] === 222 &&
+              imageData.data[pixelIndex + 1] === 250 &&
+              imageData.data[pixelIndex + 2] === 206
+            ) {
+              if ((x + y) % 2 === 0) { // Formula for checkerboard pattern
+                imageData.data[pixelIndex] = 0;
+                imageData.data[pixelIndex + 1] = 0;
+                imageData.data[pixelIndex + 2] = 0;
+                imageData.data[pixelIndex + 3] = 32; // Translucent black
+              } else { // Transparent negative space
+                imageData.data[pixelIndex + 3] = 0;
+              }
+            } else if (x % shreadSize !== 1 || y % shreadSize !== 1) { // Otherwise only draw the middle pixel
               imageData.data[pixelIndex + 3] = 0; // Make the pixel transparent on the alpha channel
-
-              // if (!!imageData.data[pixelIndex + 3]) {
-              //   imageData.data[pixelIndex + 3] = 50; // Alpha
-              //   imageData.data[pixelIndex] = 30; // Red
-              //   imageData.data[pixelIndex + 1] = 30; // Green
-              //   imageData.data[pixelIndex + 2] = 30; // Blue
-              // }
             }
           }
         }

@@ -4,6 +4,7 @@ import { base64ToUint8, numberToEncoded } from "./utils";
 /** Manages the template system.
  * This class handles all external requests for template modification, creation, and analysis.
  * It serves as the central coordinator between template instances and the user interface.
+ * @class TemplateManager
  * @since 0.55.8
  * @example
  * // JSON structure for a template
@@ -199,7 +200,7 @@ export default class TemplateManager {
   /** Draws all templates on the specified tile.
    * This method handles the rendering of template overlays on individual tiles.
    * @param {File} tileBlob - The pixels that are placed on a tile
-   * @param {[number, number]} tileCoords - The tile coordinates [x, y]
+   * @param {Array<number>} tileCoords - The tile coordinates [x, y]
    * @since 0.65.77
    */
   async drawTemplateOnTile(tileBlob, tileCoords) {

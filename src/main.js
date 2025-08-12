@@ -1,4 +1,4 @@
-/** The main file. Everything in the userscript is executed from here.
+/** @file The main file. Everything in the userscript is executed from here.
  * @since 0.0.0
  */
 
@@ -99,7 +99,7 @@ inject(() => {
         .catch(err => {
           console.error(`%c${name}%c: Failed to parse JSON: `, consoleStyle, '', err);
         });
-    } else if (contentType.includes('image/') && (!endpointName.includes('openfreemap'))) {
+    } else if (contentType.includes('image/') && (!endpointName.includes('openfreemap') && !endpointName.includes('maps'))) {
       // Fetch custom for all images but opensourcemap
 
       const blink = Date.now(); // Current time
@@ -174,11 +174,12 @@ document.head?.appendChild(stylesheetLink);
 
 // CONSTRUCTORS
 const observers = new Observers(); // Constructs a new Observers object
-const overlay = new Overlay(name, version); // Constructs a new Overlay object
-const templateManager = new TemplateManager(name, version, overlay); // Constructs a new TemplateManager object
+const overlayMain = new Overlay(name, version); // Constructs a new Overlay object for the main overlay
+const overlayTabTemplate = new Overlay(name, version); // Constructs a Overlay object for the template tab
+const templateManager = new TemplateManager(name, version, overlayMain); // Constructs a new TemplateManager object
 const apiManager = new ApiManager(templateManager); // Constructs a new ApiManager object
 
-overlay.setApiManager(apiManager); // Sets the API manager
+overlayMain.setApiManager(apiManager); // Sets the API manager
 
 const storageTemplates = JSON.parse(GM_getValue('bmTemplates', '{}'));
 console.log(storageTemplates);
@@ -186,9 +187,9 @@ templateManager.importJSON(storageTemplates); // Loads the templates
 
 buildOverlayMain(); // Builds the main overlay
 
-overlay.handleDrag('#bm-overlay', '#bm-bar-drag'); // Creates dragging capability on the drag bar for dragging the overlay
+overlayMain.handleDrag('#bm-overlay', '#bm-bar-drag'); // Creates dragging capability on the drag bar for dragging the overlay
 
-apiManager.spontaneousResponseListener(overlay); // Reads spontaneous fetch responces
+apiManager.spontaneousResponseListener(overlayMain); // Reads spontaneous fetch responces
 
 observeBlack(); // Observes the black palette color
 
@@ -242,7 +243,7 @@ function observeBlack() {
 function buildOverlayMain() {
   let isMinimized = false; // Overlay state tracker (false = maximized, true = minimized)
   
-  overlay.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
+  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
     .addDiv({'id': 'bm-contain-header'})
       .addDiv({'id': 'bm-bar-drag'}).buildElement()
       .addImg({'alt': 'Blue Marble Icon - Click to minimize/maximize', 'src': 'https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/assets/Favicon.png', 'style': 'cursor: pointer;'}, 
@@ -540,7 +541,7 @@ function buildOverlayMain() {
           }
         }).buildElement()
       .buildElement()
-      .addTextarea({'id': overlay.outputStatusId, 'placeholder': `Status: Sleeping...\nVersion: ${version}`, 'readOnly': true}).buildElement()
+      .addTextarea({'id': overlayMain.outputStatusId, 'placeholder': `Status: Sleeping...\nVersion: ${version}`, 'readOnly': true}).buildElement()
       .addDiv({'id': 'bm-contain-buttons-action'})
         .addDiv()
           // .addButton({'id': 'bm-button-teleport', 'className': 'bm-help', 'textContent': '✈'}).buildElement()
@@ -557,4 +558,28 @@ function buildOverlayMain() {
       .buildElement()
     .buildElement()
   .buildOverlay(document.body);
-} 
+}
+
+function buildOverlayTabTemplate() {
+  overlayTabTemplate.addDiv({'id': 'bm-tab-template', 'style': 'top: 20%; left: 10%;'})
+      .addDiv()
+        .addDiv({'className': 'bm-dragbar'}).buildElement()
+        .addButton({'className': 'bm-button-minimize', 'textContent': '↑'},
+          (instance, button) => {
+            button.onclick = () => {
+              let isMinimized = false;
+              if (button.textContent == '↑') {
+                button.textContent = '↓';
+              } else {
+                button.textContent = '↑';
+                isMinimized = true;
+              }
+
+              
+            }
+          }
+        ).buildElement()
+      .buildElement()
+    .buildElement()
+  .buildOverlay();
+}

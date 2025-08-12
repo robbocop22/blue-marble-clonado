@@ -306,21 +306,28 @@ export default class TemplateManager {
     return await canvas.convertToBlob({ type: 'image/png' });
   }
 
-  /** Imports the JSON object, and appends it to any JSON object already loaded
+/** Imports the JSON object, and appends it to any JSON object already loaded. Returns a Promise<boolean> indicating whether or not the importing succeeded
    * @param {string} json - The JSON string to parse
    */
   importJSON(json) {
 
     console.log(`Importing JSON...`);
     console.log(json);
+    console.log(json["whoami"]);
+    if (!json.hasOwnProperty("whoami")) {
+      // Return false if incorrect / malformed data is provided
+      return false;
+    }
 
     // If the passed in JSON is a Blue Marble template object...
-    if (json?.whoami == 'BlueMarble') {
-      this.#parseBlueMarble(json); // ...parse the template object as Blue Marble
+    if (json["whoami"] == "BlueMarble") {
+      return this.#parseBlueMarble(json); // ...parse the template object as Blue Marble
     }
+    return false;
   }
 
   /** Parses the Blue Marble JSON object
+  /** Parses the Blue Marble JSON object. Returns a boolean indicating whether or not the parsing succeeded
    * @param {string} json - The JSON string to parse
    * @since 0.72.13
    */
@@ -328,53 +335,81 @@ export default class TemplateManager {
 
     console.log(`Parsing BlueMarble...`);
 
-    const templates = json.templates;
+    if (!json.hasOwnProperty("templates"))
+      // Return false if incorrect / malformed data is provided
+      return false;
+
+    const templates = json["templates"];
+
+    if (typeof templates !== "object")
+      // Return false if incorrect / malformed data is provided
+      return false;
 
     console.log(`BlueMarble length: ${Object.keys(templates).length}`);
 
-    if (Object.keys(templates).length > 0) {
+    for (const templateKey in templates) {
 
-      for (const template in templates) {
+      const templateValue = templates[templateKey];
+      console.log(templateKey);
 
-        const templateKey = template;
-        const templateValue = templates[template];
-        console.log(templateKey);
+      const templateKeyArray = templateKey.split(" "); // E.g., "0 $Z" -> ["0", "$Z"]
+      const sortID = Number(templateKeyArray?.[0]); // Sort ID of the template
+      const authorID = templateKeyArray?.[1] || "0"; // User ID of the person who exported the template
 
-        if (templates.hasOwnProperty(template)) {
+      if (!templateValue.hasOwnProperty("name") || typeof templateValue["name"] !== "string") return false; // Return false if incorrect / malformed data is provided
 
-          const templateKeyArray = templateKey.split(' '); // E.g., "0 $Z" -> ["0", "$Z"]
-          const sortID = Number(templateKeyArray?.[0]); // Sort ID of the template
-          const authorID = templateKeyArray?.[1] || '0'; // User ID of the person who exported the template
-          const displayName = templateValue.name || `Template ${sortID || ''}`; // Display name of the template
-          //const coords = templateValue?.coords?.split(',').map(Number); // "1,2,3,4" -> [1, 2, 3, 4]
-          const tilesbase64 = templateValue.tiles;
-          const templateTiles = {}; // Stores the template bitmap tiles for each tile.
+      const displayName = templateValue["name"] || `Template ${sortID || ""}`; // Display name of the template
+      // const coords = templateValue?.coords?.split(',').map(Number); // "1,2,3,4" -> [1, 2, 3, 4]
 
-          for (const tile in tilesbase64) {
-            console.log(tile);
-            if (tilesbase64.hasOwnProperty(tile)) {
-              const encodedTemplateBase64 = tilesbase64[tile];
-              const templateUint8Array = base64ToUint8(encodedTemplateBase64); // Base 64 -> Uint8Array
+      if (!templateValue.hasOwnProperty("tiles") || Array.isArray(templateValue["tiles"])) return false; // Return false if incorrect / malformed data is provided
 
-              const templateBlob = new Blob([templateUint8Array], { type: "image/png" }); // Uint8Array -> Blob
-              const templateBitmap = await createImageBitmap(templateBlob) // Blob -> Bitmap
-              templateTiles[tile] = templateBitmap;
-            }
-          }
+      const tilesbase64 = templateValue["tiles"];
+      const templateTiles = {}; // Stores the template bitmap tiles for each tile.
 
-          // Creates a new Template class instance
-          const template = new Template({
-            displayName: displayName,
-            sortID: sortID || this.templatesArray?.length || 0,
-            authorID: authorID || '',
-            //coords: coords
-          });
-          template.chunked = templateTiles;
-          this.templatesArray.push(template);
-          console.log(this.templatesArray);
-          console.log(`^^^ This ^^^`);
-        }
+      for (const tile in tilesbase64) {
+        console.log(tile);
+        if (!tilesbase64.hasOwnProperty(tile)) return false; // Return false if incorrect / malformed data is provided
+        const encodedTemplateBase64 = tilesbase64[tile];
+        const templateUint8Array = base64ToUint8(encodedTemplateBase64); // Base 64 -> Uint8Array
+
+        const templateBlob = new Blob([templateUint8Array], { type: "image/png" }); // Uint8Array -> Blob
+        const templateBitmap = await createImageBitmap(templateBlob); // Blob -> Bitmap
+        templateTiles[tile] = templateBitmap;
       }
+
+      // Creates a new Template class instance
+      const template = new Template({
+        displayName: displayName,
+        sortID: sortID || this.templatesArray?.length || 0,
+        authorID: authorID || "",
+        //coords: coords
+      });
+      template.chunked = templateTiles;
+      this.templatesArray.push(template);
+      console.log(this.templatesArray);
+      console.log(`^^^ This ^^^`);
+
+      // Creates the JSON object if it does not already exist
+      if (!this.templatesJSON) {
+        this.templatesJSON = await this.createJSON();
+        console.log(`Creating JSON...`);
+      }
+
+      if (!templateValue.hasOwnProperty("coords") || typeof templateValue.coords !== "string")
+        // Return false if incorrect / malformed data is provided
+        return false;
+
+      // Update the current JSON object with the new template
+      this.templatesJSON.templates[`${sortID} ${authorID}`] = {
+        name: displayName,
+        coords: templateValue["coords"],
+        enabled: true,
+        tiles: tilesbase64, // Stores the chunked tile buffers
+      };
+      
+      this.#storeTemplates(); // Update the userscript storage
+
+      return true;
     }
   }
 

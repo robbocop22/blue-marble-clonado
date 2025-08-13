@@ -436,7 +436,7 @@ export default class TemplateManager {
         }
       } catch (_) {
         // Fallback to drawing raw bitmap if filtering fails
-        context.drawImage(template.bitmap, Number(template.pixelCoords[0]) * this.drawMult, Number(template.pixelCoords[1]) * this.drawMult);
+      context.drawImage(template.bitmap, Number(template.pixelCoords[0]) * this.drawMult, Number(template.pixelCoords[1]) * this.drawMult);
       }
     }
 

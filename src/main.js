@@ -18,12 +18,14 @@ const consoleStyle = 'color: cornflowerblue;'; // The styling for the console lo
  * @since 0.11.15
  */
 function inject(callback) {
+  setTimeout(() => {
     const script = document.createElement('script');
     script.setAttribute('bm-name', name); // Passes in the name value
     script.setAttribute('bm-cStyle', consoleStyle); // Passes in the console style value
     script.textContent = `(${callback})();`;
     document.documentElement?.appendChild(script);
     script.remove();
+  }, 250)
 }
 
 /** What code to execute instantly in the client (webpage) to spy on fetch calls.
@@ -71,9 +73,10 @@ inject(() => {
   const originalFetch = window.fetch; // Saves a copy of the original fetch
 
   // Overrides fetch
-  window.fetch = async function(...args) {
+  window.bmfetchPatch = async function(fetchImpl, ...args) {
+    console.log("!!! FETCH !!!", fetchImpl, args);
 
-    const response = await originalFetch.apply(this, args); // Sends a fetch
+    const response = await fetchImpl.apply(this, args); // Sends a fetch
     const cloned = response.clone(); // Makes a copy of the response
 
     // Retrieves the endpoint name. Unknown endpoint = "ignore"
@@ -99,7 +102,7 @@ inject(() => {
         .catch(err => {
           console.error(`%c${name}%c: Failed to parse JSON: `, consoleStyle, '', err);
         });
-    } else if (contentType.includes('image/') && (!endpointName.includes('openfreemap') && !endpointName.includes('maps'))) {
+    } else if (contentType.includes('image/') && (!endpointName.includes('openfreemap') && !endpointName.includes('maps') && !endpointName.includes("ofm.rooot.gay"))) {
       // Fetch custom for all images but opensourcemap
 
       const blink = Date.now(); // Current time
@@ -155,6 +158,11 @@ inject(() => {
 
     return response; // Returns the original response
   };
+
+  if (!window.fetchIsPatched) {
+      window.fetch = async function(...args) { return await window.bmfetchPatch(originalFetch, ...args); };
+  }
+
 });
 
 // Imports the CSS file from dist folder on github

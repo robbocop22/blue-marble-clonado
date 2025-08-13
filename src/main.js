@@ -697,6 +697,82 @@ function buildOverlayMain() {
         }
       });
       actions.appendChild(btn);
+
+      // Automatic screenshot controls
+      let autoSnap = { enabled: false, intervalSec: 60 };
+      try {
+        const stored = JSON.parse(GM_getValue('bmAutoSnap', '{}')) || {};
+        autoSnap.enabled = !!stored.enabled;
+        autoSnap.intervalSec = Number(stored.intervalSec) || 60;
+      } catch (_) {}
+      let autoTimer = null;
+
+      const persistAuto = () => {
+        try { GM.setValue('bmAutoSnap', JSON.stringify(autoSnap)); } catch (_) {}
+      };
+      const stopAuto = () => { if (autoTimer) { clearInterval(autoTimer); autoTimer = null; } };
+      const doCapture = async () => {
+        try {
+          const blob = await templateManager.exportTemplateImage();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const ts = new Date().toISOString().replace(/[:.]/g, '-');
+          a.href = url;
+          a.download = `autosnap-${ts}.png`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 4000);
+        } catch (err) { console.error('Auto-snap failed:', err); }
+      };
+      const startAuto = () => {
+        stopAuto();
+        if (!autoSnap.enabled) { return; }
+        const ms = Math.max(1, Number(autoSnap.intervalSec || 60)) * 1000;
+        autoTimer = setInterval(doCapture, ms);
+      };
+
+      const autoWrap = document.createElement('div');
+      autoWrap.style.display = 'flex';
+      autoWrap.style.alignItems = 'center';
+      autoWrap.style.gap = '6px';
+
+      const autoLabel = document.createElement('small');
+      autoLabel.textContent = 'Auto';
+
+      const autoChk = document.createElement('input');
+      autoChk.type = 'checkbox';
+      autoChk.id = 'bm-auto-snap';
+      autoChk.title = 'Automatic screenshots';
+      autoChk.checked = !!autoSnap.enabled;
+      autoChk.addEventListener('change', () => {
+        autoSnap.enabled = autoChk.checked;
+        persistAuto();
+        startAuto();
+        overlayMain.handleDisplayStatus(`Auto screenshots ${autoSnap.enabled ? 'enabled' : 'disabled'}`);
+      });
+
+      const autoInp = document.createElement('input');
+      autoInp.type = 'number';
+      autoInp.min = '5';
+      autoInp.step = '1';
+      autoInp.value = String(autoSnap.intervalSec || 60);
+      autoInp.title = 'Interval (seconds)';
+      autoInp.style.width = '5ch';
+      autoInp.addEventListener('change', () => {
+        const val = Number(autoInp.value) || 60;
+        autoSnap.intervalSec = Math.max(1, val);
+        persistAuto();
+        if (autoSnap.enabled) { startAuto(); }
+      });
+
+      autoWrap.appendChild(autoLabel);
+      autoWrap.appendChild(autoChk);
+      autoWrap.appendChild(autoInp);
+      actions.appendChild(autoWrap);
+
+      // Kick off if previously enabled
+      startAuto();
     }
   } catch (_) {}
 

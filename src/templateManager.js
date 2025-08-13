@@ -62,6 +62,7 @@ export default class TemplateManager {
     this.templatesJSON = null; // All templates currently loaded (JSON)
     this.templatesShouldBeDrawn = true; // Should ALL templates be drawn to the canvas?
     this.tileProgress = new Map(); // Tracks per-tile progress stats {painted, required, wrong}
+    this.boardTileBitmaps = new Map(); // Cache of original board tile bitmaps keyed by "xxxx,yyyy"
   }
 
   /** Retrieves the pixel art canvas.
@@ -296,6 +297,13 @@ export default class TemplateManager {
 
     context.clearRect(0, 0, drawSize, drawSize); // Draws transparent background
     context.drawImage(tileBitmap, 0, 0, drawSize, drawSize);
+    // Cache original board tile for screenshotting progress later
+    try {
+      const paddedKey = tileCoords;
+      if (!this.boardTileBitmaps.has(paddedKey)) {
+        this.boardTileBitmaps.set(paddedKey, tileBitmap);
+      }
+    } catch (_) {}
 
     // Grab a snapshot of the tile pixels BEFORE we draw any template overlays
     let tilePixels = null;
@@ -466,6 +474,83 @@ export default class TemplateManager {
       );
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);
+    }
+
+    return await canvas.convertToBlob({ type: 'image/png' });
+  }
+
+  /** Exports the current template region as a PNG image.
+   * Composites the ACTUAL BOARD pixels for the full template region (scaled by drawMult).
+   * Uses cached board tiles captured during normal drawing; if a tile was not seen yet, it will be blank.
+   * @returns {Promise<Blob>} PNG blob of the template region
+   */
+  async exportTemplateImage() {
+    const template = this.templatesArray?.[0];
+    if (!template?.chunked) { throw new Error('No template loaded'); }
+
+    const entries = Object.entries(template.chunked);
+    if (entries.length === 0) { throw new Error('Template has no chunks'); }
+
+    // Compute bounds in scaled coordinates
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    for (const [key, bitmap] of entries) {
+      const parts = key.split(',');
+      const tileX = Number(parts[0]);
+      const tileY = Number(parts[1]);
+      const px = Number(parts[2]);
+      const py = Number(parts[3]);
+      const gx = (tileX * this.tileSize + px) * this.drawMult;
+      const gy = (tileY * this.tileSize + py) * this.drawMult;
+      const ex = gx + bitmap.width;
+      const ey = gy + bitmap.height;
+      if (gx < minX) minX = gx;
+      if (gy < minY) minY = gy;
+      if (ex > maxX) maxX = ex;
+      if (ey > maxY) maxY = ey;
+    }
+
+    const width = Math.max(1, Math.ceil(maxX - minX));
+    const height = Math.max(1, Math.ceil(maxY - minY));
+    const canvas = new OffscreenCanvas(width, height);
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    ctx.imageSmoothingEnabled = false;
+    ctx.clearRect(0, 0, width, height);
+
+    // Composite board tiles within template region bounds, per-chunk
+    for (const [key, bitmap] of entries) {
+      const parts = key.split(',');
+      const tileX = Number(parts[0]);
+      const tileY = Number(parts[1]);
+      const px = Number(parts[2]);
+      const py = Number(parts[3]);
+      const dx = (tileX * this.tileSize + px) * this.drawMult - minX;
+      const dy = (tileY * this.tileSize + py) * this.drawMult - minY;
+
+      const tileKey = `${tileX.toString().padStart(4,'0')},${tileY.toString().padStart(4,'0')}`;
+      const boardTile = this.boardTileBitmaps.get(tileKey);
+      if (!boardTile) { continue; }
+      // Normalize board tile to expected scaled size
+      const expectedSize = this.tileSize * this.drawMult;
+      let boardSource = boardTile;
+      if (boardTile.width !== expectedSize || boardTile.height !== expectedSize) {
+        try {
+          const sc = new OffscreenCanvas(expectedSize, expectedSize);
+          const sctx = sc.getContext('2d', { willReadFrequently: true });
+          sctx.imageSmoothingEnabled = false;
+          sctx.clearRect(0, 0, expectedSize, expectedSize);
+          sctx.drawImage(boardTile, 0, 0, expectedSize, expectedSize);
+          boardSource = sc;
+        } catch (_) { /* fallback to original */ }
+      }
+      // Draw tile at the origin of its tile space; boardTile is already drawMult-scaled (fetched as drawSize)
+      // We need only the sub-rect corresponding to px,py offset and template chunk size
+      const srcX = Number(px) * this.drawMult;
+      const srcY = Number(py) * this.drawMult;
+      const srcW = Math.min(bitmap.width, Math.max(0, (boardSource.width || expectedSize) - srcX));
+      const srcH = Math.min(bitmap.height, Math.max(0, (boardSource.height || expectedSize) - srcY));
+      try {
+        ctx.drawImage(boardSource, srcX, srcY, srcW, srcH, dx, dy, srcW, srcH);
+      } catch (_) {}
     }
 
     return await canvas.convertToBlob({ type: 'image/png' });

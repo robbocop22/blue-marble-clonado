@@ -669,6 +669,37 @@ function buildOverlayMain() {
     }
   });
 
+  // Add Screenshot button beside color converter
+  try {
+    const actions = document.querySelector('#bm-contain-buttons-action > div');
+    if (actions) {
+      const btn = document.createElement('button');
+      btn.id = 'bm-button-screenshot';
+      btn.className = 'bm-help';
+      btn.title = 'Save Template Screenshot';
+      btn.textContent = '📸';
+      btn.addEventListener('click', async () => {
+        try {
+          const blob = await templateManager.exportTemplateImage();
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          const ts = new Date().toISOString().replace(/[:.]/g, '-');
+          a.href = url;
+          a.download = `template-${ts}.png`;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          setTimeout(() => URL.revokeObjectURL(url), 2000);
+          overlayMain.handleDisplayStatus('Template screenshot saved');
+        } catch (err) {
+          overlayMain.handleDisplayError('Failed to save template screenshot');
+          console.error(err);
+        }
+      });
+      actions.appendChild(btn);
+    }
+  } catch (_) {}
+
   // If a template was already loaded from storage, show the color UI and build list
   setTimeout(() => {
     try {

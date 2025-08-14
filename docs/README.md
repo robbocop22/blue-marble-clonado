@@ -124,10 +124,10 @@
       <ol>
         <li>Install the <a href="https://chromewebstore.google.com/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo" target="_blank" rel="noopener noreferrer">TamperMonkey</a> plugin for Chrome.
         <br>
-        <img alt="Click the 'Add extention' button" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerChromeInstall1.png"></li>
-        <li>Right-click the extention.
+        <img alt="Click the 'Add extension' button" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerChromeInstall1.png"></li>
+        <li>Right-click the extension.
         <br>
-        <img alt="Enter the 'Manage Extention' menu" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerChromeInstall2.png"></li>
+        <img alt="Enter the 'Manage Extension' menu" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerChromeInstall2.png"></li>
         <li>Left-click "Manage Extension."</li>
         <li>Enable "Developer Mode."
         <br>
@@ -147,9 +147,9 @@
         <li>Install the <a href="https://microsoftedge.microsoft.com/addons/detail/iikmkjmpaadaobahmlepeloendndfphd" target="_blank" rel="noopener noreferrer">TamperMonkey</a> plugin for Microsoft Edge.
         <br>
         <img alt="Click the 'Get' button" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerEdgeInstall1.png"></li>
-        <li>Right-click the extention.
+        <li>Right-click the extension.
         <br>
-        <img alt="Enter the 'Manage Extention' menu" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerEdgeInstall2.png"></li>
+        <img alt="Enter the 'Manage Extension' menu" src="https://github.com/SwingTheVine/Wplace-BlueMarble/blob/main/docs/assets/ComputerEdgeInstall2.png"></li>
         <li>Left-click "Manage Extension."</li>
         <li>Enable "Developer Mode."
         <br>

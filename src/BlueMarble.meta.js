@@ -11,7 +11,8 @@
 // @updateURL    https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/BlueMarble.user.js
 // @downloadURL  https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/BlueMarble.user.js
 // @run-at       document-start
-// @match        *://*.wplace.live/*
+// @match        https://wplace.live/
+// @match        https://wplace.live/?*
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM.setValue

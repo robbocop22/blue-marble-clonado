@@ -9,7 +9,7 @@
   border-radius: 8px;
   z-index: 9000;
   transition: all 0.3s ease, transform 0s;
-  max-width: 300px;
+  max-width: 400px;
   width: auto;
   /* Performance optimizations for smooth dragging */
   will-change: transform;
@@ -85,7 +85,7 @@ div#bm-overlay {
 /* Ensure overlay maintains consistent width when minimized */
 #bm-overlay[style*="padding: 5px"] {
   width: auto !important;
-  max-width: 300px;
+  max-width: 400px;
   min-width: 200px;
 }
 

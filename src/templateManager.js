@@ -282,6 +282,7 @@ export default class TemplateManager {
     let paintedCount = 0;
     let wrongCount = 0;
     let requiredCount = 0;
+    const perTilePainted = new Map(); // rgb -> painted count for this tile
     
     const tileBitmap = await createImageBitmap(tileBlob);
 
@@ -386,6 +387,10 @@ export default class TemplateManager {
                 // Unpainted -> neither painted nor wrong
               } else if (pr === tr && pg === tg && pb === tb) {
                 paintedCount++;
+                try {
+                  const rgb = `${tr},${tg},${tb}`;
+                  perTilePainted.set(rgb, (perTilePainted.get(rgb) || 0) + 1);
+                } catch (_) {}
               } else {
                 wrongCount++;
               }
@@ -448,6 +453,9 @@ export default class TemplateManager {
         required: requiredCount,
         wrong: wrongCount,
       });
+      // Update per-color painted stats for this tile
+      this.tileColorPainted = this.tileColorPainted || new Map();
+      this.tileColorPainted.set(tileKey, perTilePainted);
 
       // Aggregate painted/wrong across tiles we've processed
       let aggPainted = 0;
@@ -472,6 +480,8 @@ export default class TemplateManager {
       this.overlay.handleDisplayStatus(
         `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
       );
+      // Ask UI to refresh color list (per-color progress)
+      try { window.postMessage({ source: 'blue-marble', bmEvent: 'bm-rebuild-color-list' }, '*'); } catch (_) {}
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);
     }

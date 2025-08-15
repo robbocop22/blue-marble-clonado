@@ -256,7 +256,7 @@ function buildOverlayMain() {
     } catch (_) {}
   };
   
-  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
+  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px; max-width: 400px;'})
     .addDiv({'id': 'bm-contain-header'})
       .addDiv({'id': 'bm-bar-drag'}).buildElement()
       .addImg({'alt': 'Blue Marble Icon - Click to minimize/maximize', 'src': 'https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/assets/Favicon.png', 'style': 'cursor: pointer;'}, 
@@ -295,7 +295,7 @@ function buildOverlayMain() {
             // This ensures smooth transition and prevents layout issues
             if (!isMinimized) {
               overlay.style.width = "auto";
-              overlay.style.maxWidth = "300px";
+              overlay.style.maxWidth = "400px";
               overlay.style.minWidth = "200px";
               overlay.style.padding = "10px";
             }
@@ -610,6 +610,16 @@ function buildOverlayMain() {
     const entries = Object.entries(t.colorPalette)
       .sort((a,b) => b[1].count - a[1].count); // sort by frequency desc
 
+    // Build aggregated per-color painted across all processed tiles
+    const tilePaintedMap = templateManager.tileColorPainted || new Map();
+    const aggPainted = new Map();
+    for (const m of tilePaintedMap.values()) {
+      if (!(m instanceof Map)) { continue; }
+      for (const [rgb, cnt] of m.entries()) {
+        aggPainted.set(rgb, (aggPainted.get(rgb) || 0) + (cnt || 0));
+      }
+    }
+
     for (const [rgb, meta] of entries) {
       const [r,g,b] = rgb.split(',').map(Number);
 
@@ -627,7 +637,8 @@ function buildOverlayMain() {
 
       const label = document.createElement('span');
       label.style.fontSize = '12px';
-      let labelText = `${meta.count.toLocaleString()}`;
+      const paintedForColor = aggPainted.get(rgb) || 0;
+      let labelText = `${paintedForColor.toLocaleString()} / ${meta.count.toLocaleString()}`;
       try {
         const tMeta = templateManager.templatesArray?.[0]?.rgbToMeta?.get(rgb);
         if (tMeta && typeof tMeta.id === 'number') {

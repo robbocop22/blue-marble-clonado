@@ -94,6 +94,14 @@ export default class ApiManager {
           
           const spanElements = document.querySelectorAll('span'); // Retrieves all span elements
 
+          // Function to handle the auto filler
+          const autoFillHandler = () => {
+            document.querySelector('#bm-input-tx').value = coordsTile[0];
+            document.querySelector('#bm-input-ty').value = coordsTile[1];
+            document.querySelector('#bm-input-px').value = coordsPixel[0];
+            document.querySelector('#bm-input-py').value = coordsPixel[1];
+          }
+
           // For every span element, find the one we want (pixel numbers when canvas clicked)
           for (const element of spanElements) {
             if (element.textContent.trim().includes(`${displayTP[0]}, ${displayTP[1]}`)) {
@@ -101,17 +109,33 @@ export default class ApiManager {
               let displayCoords = document.querySelector('#bm-display-coords'); // Find the additional pixel coords span
 
               const text = `(Tl X: ${coordsTile[0]}, Tl Y: ${coordsTile[1]}, Px X: ${coordsPixel[0]}, Px Y: ${coordsPixel[1]})`;
-              
+              const parentNode = element.parentNode.parentNode.parentNode;
               // If we could not find the addition coord span, we make it then update the textContent with the new coords
+              let fillButton;
               if (!displayCoords) {
+                fillButton = document.createElement("button");
+                fillButton.textContent = "Auto fill";
+                fillButton.classList.add('btn', 'btn-xs', 'btn-soft', 'py-3', 'text-sm', 'max-sm:max-w-32');
+                fillButton.style = 'margin-left: 10px;';
+                fillButton.id = 'bm-auto-fill';
+
+                const div = document.createElement('div');
+                div.style = 'display: flex; gap: 3px; align-items: center; margin: 10px 0;';
+                parentNode.insertAdjacentElement('afterend', div);
+
                 displayCoords = document.createElement('span');
                 displayCoords.id = 'bm-display-coords';
                 displayCoords.textContent = text;
                 displayCoords.style = 'margin-left: calc(var(--spacing)*3); font-size: small;';
-                element.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', displayCoords);
+
+                div.insertAdjacentElement('beforeend', displayCoords);
+                div.insertAdjacentElement('beforeend', fillButton);
               } else {
+                fillButton = document.getElementById('bm-auto-fill');
                 displayCoords.textContent = text;
               }
+              fillButton.removeEventListener('click', autoFillHandler);
+              fillButton.addEventListener('click', autoFillHandler);
             }
           }
           break;

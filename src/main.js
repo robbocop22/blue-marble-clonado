@@ -370,7 +370,8 @@ function buildOverlayMain() {
                 overlay.style.padding = '8px';    // Comfortable padding around icon
 
                 // Apply icon positioning for better visual centering in minimized state
-                img.style.margin = '.5rem 1rem 0';
+                // The 3px offset compensates for visual weight distribution
+                img.style.marginLeft = '3px';
 
                 // Configure header layout for minimized state
                 header.style.textAlign = 'center';

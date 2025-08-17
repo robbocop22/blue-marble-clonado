@@ -340,7 +340,7 @@ export default class TemplateManager {
               const tb = tData[tIdx + 2];
               const ta = tData[tIdx + 3];
               // Handle template transparent pixel (alpha < 64): wrong if board has any site palette color here
-              if (ta < 64) {
+              if (ta > 0 && ta < 64) {
                 try {
                   const activeTemplate = this.templatesArray?.[0];
                   const tileIdx = (gy * drawSize + gx) * 4;
@@ -378,7 +378,7 @@ export default class TemplateManager {
                 // Unpainted -> neither painted nor wrong
               } else if (pr === tr && pg === tg && pb === tb) {
                 paintedCount++;
-              } else {
+              } else if (ta > 0) {
                 wrongCount++;
               }
             }
@@ -407,7 +407,7 @@ export default class TemplateManager {
           const data = img.data;
           for (let y = 0; y < tempH; y++) {
             for (let x = 0; x < tempW; x++) {
-              if ((x % this.drawMult) !== 1 || (y % this.drawMult) !== 1) { continue; }
+              //if ((x % this.drawMult) !== 1 || (y % this.drawMult) !== 1) { continue; } // Hide the whole pixel block to include checkerboard pattern
               const idx = (y * tempW + x) * 4;
               const r = data[idx];
               const g = data[idx + 1];
@@ -459,7 +459,7 @@ export default class TemplateManager {
 
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
-      const wrongStr = new Intl.NumberFormat().format(totalRequired - aggPainted); // Used to be aggWrong, but that is bugged
+      const wrongStr = new Intl.NumberFormat().format(aggWrong);
 
       this.overlay.handleDisplayStatus(
         `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`

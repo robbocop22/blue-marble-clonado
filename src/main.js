@@ -551,53 +551,39 @@ function buildOverlayMain() {
       .buildElement()
       // Color filter UI
       .addDiv({'id': 'bm-contain-colorfilter', 'style': 'height: 140px; max-height: fit-content; resize: vertical; overflow: auto; border: 1px solid rgba(255,255,255,0.1); padding: 4px; border-radius: 4px; display: none;'})
-        .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px;'})
-          .addButton({'id': 'bm-button-colors-enable-all', 'textContent': 'Enable All'}, (instance, button) => {
-            button.onclick = () => {
-              const t = templateManager.templatesArray[0];
-              if (!t?.colorPalette) { return; }
-              Object.values(t.colorPalette).forEach(v => v.enabled = true);
-              buildColorFilterList();
-              instance.handleDisplayStatus('Enabled all colors');
-            };
-          }).buildElement()
-          .addButton({'id': 'bm-button-colors-disable-all', 'textContent': 'Disable All'}, (instance, button) => {
-            button.onclick = () => {
-              const t = templateManager.templatesArray[0];
-              if (!t?.colorPalette) { return; }
-              Object.values(t.colorPalette).forEach(v => v.enabled = false);
-              buildColorFilterList();
-              instance.handleDisplayStatus('Disabled all colors');
-            };
-          }).buildElement()
-        .buildElement()
-        .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px;'})
-          .addButton({'id': 'bm-button-colors-enable-owned', 'textContent': 'Enable owned'}, (instance, button) => {
-            button.onclick = () => {
-              const t = templateManager.templatesArray[0];
-              if (!t?.colorPalette) { return; }
-              for (const [rgb, owned] of templateManager.ownedColors) {
-                if (owned && t.colorPalette[rgb]) {
-                  t.colorPalette[rgb].enabled = true;
+        .addSelect({'style': 'background-color: #144eb9; width: 100%; margin-bottom: 6px;'}, (instance, select) => {
+          select.onchange = () => {
+            console.log('select change:', select.value);
+            const t = templateManager.templatesArray[0];
+            if (!t?.colorPalette) { return; }
+            const value = select.value;
+            switch (value) {
+              case 'all':
+              case 'none':
+                Object.values(t.colorPalette).forEach(v => v.enabled = value === 'all');
+                instance.handleDisplayStatus(`${value === 'all' ? 'Enabled' : 'Disabled'} all colors`);
+                break;
+              case 'owned':
+              case 'bought':
+                Object.values(t.colorPalette).forEach(v => v.enabled = value === 'owned');
+                for (const [rgb, owned] of templateManager.ownedColors) {
+                  if (t.colorPalette[rgb]) {
+                    t.colorPalette[rgb].enabled = owned;
+                  }
                 }
-              }
-              buildColorFilterList();
-              instance.handleDisplayStatus('Enabled owned colors');
-            };
-          }).buildElement()
-          .addButton({'id': 'bm-button-colors-disable-unowned', 'textContent': 'Disable Unowned'}, (instance, button) => {
-            button.onclick = () => {
-              const t = templateManager.templatesArray[0];
-              if (!t?.colorPalette) { return; }
-              for (const [rgb, owned] of templateManager.ownedColors) {
-                if (!owned && t.colorPalette[rgb]) {
-                  t.colorPalette[rgb].enabled = false;
-                }
-              }
-              buildColorFilterList();
-              instance.handleDisplayStatus('Disabled unowned colors');
-            };
-          }).buildElement()
+                instance.handleDisplayStatus(value === 'owned' ? 'Enabled all owned colors' : 'Enabled owned premium colors');
+                break;
+              default:
+                console.warn(`Unknown color filter value: ${value}`);
+                return;
+            }
+            buildColorFilterList();
+          };
+        })
+          .addOption({'value': 'all', 'textContent': 'All'}).buildElement()
+          .addOption({'value': 'owned', 'textContent': 'Owned', 'title': 'Displays all owned colors'}).buildElement()
+          .addOption({'value': 'bought', 'textContent': 'Bought', 'title': 'Displays only owned premium colors'}).buildElement()
+          .addOption({'value': 'none', 'textContent': 'None'}).buildElement()
         .buildElement()
         .addDiv({'id': 'bm-colorfilter-list'}).buildElement()
       .buildElement()

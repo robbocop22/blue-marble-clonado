@@ -570,6 +570,19 @@ function buildOverlayMain() {
               instance.handleDisplayStatus('Disabled all colors');
             };
           }).buildElement()
+          .addButton({'id': 'bm-button-colors-disable-unowned', 'textContent': 'Disable Unowned'}, (instance, button) => {
+            button.onclick = () => {
+              const t = templateManager.templatesArray[0];
+              if (!t?.colorPalette) { return; }
+              for (const [rgb, owned] of templateManager.ownedColors) {
+                if (!owned && t.colorPalette[rgb]) {
+                  t.colorPalette[rgb].enabled = false;
+                }
+              }
+              buildColorFilterList();
+              instance.handleDisplayStatus('Disabled unowned colors');
+            };
+          }).buildElement()
         .buildElement()
         .addDiv({'id': 'bm-colorfilter-list'}).buildElement()
       .buildElement()

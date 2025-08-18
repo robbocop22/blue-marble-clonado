@@ -279,8 +279,9 @@ export default class TemplateManager {
 
     // We'll compute per-tile painted/wrong/required counts when templates exist for this tile
     let paintedCount = 0;
-    let wrongCount = 0;
     let requiredCount = 0;
+    let wrongCount = 0;
+    let unpaintedCount = 0;
     
     const tileBitmap = await createImageBitmap(tileBlob);
 
@@ -376,6 +377,7 @@ export default class TemplateManager {
 
               if (pa < 64) {
                 // Unpainted -> neither painted nor wrong
+                unpaintedCount++;
               } else if (pr === tr && pg === tg && pb === tb) {
                 paintedCount++;
               } else if (ta > 0) {
@@ -439,16 +441,19 @@ export default class TemplateManager {
         painted: paintedCount,
         required: requiredCount,
         wrong: wrongCount,
+        unpainted: unpaintedCount,
       });
 
       // Aggregate painted/wrong across tiles we've processed
       let aggPainted = 0;
       let aggRequiredTiles = 0;
       let aggWrong = 0;
+      let aggUnpainted = 0;
       for (const stats of this.tileProgress.values()) {
         aggPainted += stats.painted || 0;
         aggRequiredTiles += stats.required || 0;
         aggWrong += stats.wrong || 0;
+        aggUnpainted += stats.unpainted || 0;
       }
 
       // Determine total required across all templates
@@ -460,9 +465,10 @@ export default class TemplateManager {
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
       const wrongStr = new Intl.NumberFormat().format(aggWrong);
+      const unpaintedStr = new Intl.NumberFormat().format(aggUnpainted);
 
       this.overlay.handleDisplayStatus(
-        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
+        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr} • Unpainted ${unpaintedStr}`
       );
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);

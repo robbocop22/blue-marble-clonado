@@ -210,6 +210,17 @@ overlayMain.handleDrag('#bm-overlay', '#bm-bar-drag'); // Creates dragging capab
 
 apiManager.spontaneousResponseListener(overlayMain); // Reads spontaneous fetch responces
 
+// Force-load /me once on startup so user info and owned colors are available
+inject(() => {
+  fetch('https://backend.wplace.live/me', { credentials: 'include' })
+    .then(r => r.ok ? r.json() : null)
+    .then(json => {
+      if (!json) { return; }
+      window.postMessage({ source: 'blue-marble', endpoint: 'me', jsonData: json }, '*');
+    })
+    .catch(() => {});
+});
+
 observeBlack(); // Observes the black palette color
 
 consoleLog(`%c${name}%c (${version}) userscript has loaded!`, 'color: cornflowerblue;', '');

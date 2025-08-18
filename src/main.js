@@ -550,7 +550,7 @@ function buildOverlayMain() {
         }).buildElement()
       .buildElement()
       // Color filter UI
-      .addDiv({'id': 'bm-contain-colorfilter', 'style': 'max-height: 140px; overflow: auto; border: 1px solid rgba(255,255,255,0.1); padding: 4px; border-radius: 4px; display: none;'})
+      .addDiv({'id': 'bm-contain-colorfilter', 'style': 'height: 140px; max-height: fit-content; resize: vertical; overflow: auto; border: 1px solid rgba(255,255,255,0.1); padding: 4px; border-radius: 4px; display: none;'})
         .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px;'})
           .addButton({'id': 'bm-button-colors-enable-all', 'textContent': 'Enable All'}, (instance, button) => {
             button.onclick = () => {
@@ -568,6 +568,21 @@ function buildOverlayMain() {
               Object.values(t.colorPalette).forEach(v => v.enabled = false);
               buildColorFilterList();
               instance.handleDisplayStatus('Disabled all colors');
+            };
+          }).buildElement()
+        .buildElement()
+        .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px;'})
+          .addButton({'id': 'bm-button-colors-enable-owned', 'textContent': 'Enable owned'}, (instance, button) => {
+            button.onclick = () => {
+              const t = templateManager.templatesArray[0];
+              if (!t?.colorPalette) { return; }
+              for (const [rgb, owned] of templateManager.ownedColors) {
+                if (owned && t.colorPalette[rgb]) {
+                  t.colorPalette[rgb].enabled = true;
+                }
+              }
+              buildColorFilterList();
+              instance.handleDisplayStatus('Enabled owned colors');
             };
           }).buildElement()
           .addButton({'id': 'bm-button-colors-disable-unowned', 'textContent': 'Disable Unowned'}, (instance, button) => {

@@ -460,10 +460,10 @@ export default class TemplateManager {
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
       const wrongStr = new Intl.NumberFormat().format(aggWrong);
-      const unpaintedStr = new Intl.NumberFormat().format(totalRequired - aggPainted + aggWrong);
+      const remainingStr = new Intl.NumberFormat().format(totalRequired - aggPainted + aggWrong);
 
       this.overlay.handleDisplayStatus(
-        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr} • Unpainted ${unpaintedStr}`
+        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr} • Remaining ${remainingStr}`
       );
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);

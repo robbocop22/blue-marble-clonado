@@ -364,7 +364,7 @@ export default class TemplateManager {
                   continue;
                 }
               } catch (_) {}
-
+              
               requiredCount++;
 
               // Strict center-pixel matching. Treat transparent tile pixels as unpainted (not wrong)
@@ -376,7 +376,7 @@ export default class TemplateManager {
 
               if (pa < 64) {
                 // Unpainted -> neither painted nor wrong
-              } else if (pr === tr && pg === tg && pb === tb) {
+              } else if (pr === tr && pg === tg && pb === tb && pa == ta && ta >= 64) {
                 paintedCount++;
               } else if (ta > 0) {
                 wrongCount++;
@@ -460,9 +460,10 @@ export default class TemplateManager {
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
       const wrongStr = new Intl.NumberFormat().format(aggWrong);
+      const unpaintedStr = new Intl.NumberFormat().format(totalRequired - aggPainted + aggWrong);
 
       this.overlay.handleDisplayStatus(
-        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
+        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr} • Unpainted ${unpaintedStr}`
       );
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);

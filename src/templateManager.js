@@ -1,5 +1,5 @@
 import Template from "./Template";
-import { base64ToUint8, numberToEncoded } from "./utils";
+import { base64ToUint8, numberToEncoded, colorpalette } from "./utils";
 
 /** Manages the template system.
  * This class handles all external requests for template modification, creation, and analysis.
@@ -62,6 +62,15 @@ export default class TemplateManager {
     this.templatesJSON = null; // All templates currently loaded (JSON)
     this.templatesShouldBeDrawn = true; // Should ALL templates be drawn to the canvas?
     this.tileProgress = new Map(); // Tracks per-tile progress stats {painted, required, wrong}
+    // Tracks per-tile painted counts by color key (e.g., "r,g,b" or "other").
+    // Aggregated into colorPaintedByKey for UI display
+    this.tileColorPainted = new Map();
+    this.colorPaintedByKey = {}; // { [rgbKey: string]: number }
+    // Cache of the most recent processed/composited tile images, keyed by "xxxx,yyyy"
+    this.lastProcessedTiles = new Map();
+    // Remember the most recently computed tile size and multiplier for screenshot stitching
+    this.tileSize = this.tileSize; // already set
+    this.drawMult = this.drawMult; // already set
   }
 
   /** Retrieves the pixel art canvas.
@@ -218,12 +227,19 @@ export default class TemplateManager {
   async drawTemplateOnTile(tileBlob, tileCoords) {
 
     // Returns early if no templates should be drawn
-    if (!this.templatesShouldBeDrawn) {return tileBlob;}
+    if (!this.templatesShouldBeDrawn) {
+      try {
+        const padded = tileCoords[0].toString().padStart(4, '0') + ',' + tileCoords[1].toString().padStart(4, '0');
+        this.lastProcessedTiles.set(padded, tileBlob);
+      } catch (_) { /* no-op */ }
+      return tileBlob;
+    }
 
     const drawSize = this.tileSize * this.drawMult; // Calculate draw multiplier for scaling
 
     // Format tile coordinates with proper padding for consistent lookup
     tileCoords = tileCoords[0].toString().padStart(4, '0') + ',' + tileCoords[1].toString().padStart(4, '0');
+    const tileKey = tileCoords;
 
     console.log(`Searching for templates in tile: "${tileCoords}"`);
 
@@ -245,7 +261,10 @@ export default class TemplateManager {
       // Fallback: scan chunked keys
       return Object.keys(t.chunked).some(k => k.startsWith(tileCoords));
     });
-    if (!anyTouches) { return tileBlob; }
+    if (!anyTouches) {
+      try { this.lastProcessedTiles.set(tileKey, tileBlob); } catch (_) { /* no-op */ }
+      return tileBlob;
+    }
 
     // Retrieves the relavent template tile blobs
     const templatesToDraw = templateArray
@@ -281,6 +300,8 @@ export default class TemplateManager {
     let paintedCount = 0;
     let wrongCount = 0;
     let requiredCount = 0;
+    // Per-tile painted counts by color
+    const paintedByColor = new Map();
     
     const tileBitmap = await createImageBitmap(tileBlob);
 
@@ -404,6 +425,13 @@ export default class TemplateManager {
                 // ELSE IF the pixel matches the template center pixel color
               } else if (realPixelRed === templatePixelCenterRed && realPixelCenterGreen === templatePixelCenterGreen && realPixelCenterBlue === templatePixelCenterBlue) {
                 paintedCount++; // ...the pixel is painted correctly
+                // Track painted count for this specific color key
+                try {
+                  const activeTemplate = this.templatesArray?.[0];
+                  const keyCandidate = `${templatePixelCenterRed},${templatePixelCenterGreen},${templatePixelCenterBlue}`;
+                  const rgbKey = (activeTemplate?.allowedColorsSet && activeTemplate.allowedColorsSet.has(keyCandidate)) ? keyCandidate : 'other';
+                  paintedByColor.set(rgbKey, (paintedByColor.get(rgbKey) || 0) + 1);
+                } catch (_) { /* no-op */ }
               } else {
                 wrongCount++; // ...the pixel is NOT painted correctly
               }
@@ -489,12 +517,23 @@ export default class TemplateManager {
 
     // Save per-tile stats and compute global aggregates across all processed tiles
     if (templateCount > 0) {
-      const tileKey = tileCoords; // already padded string "xxxx,yyyy"
+      // const tileKey = tileCoords; // already padded string "xxxx,yyyy" (hoisted earlier)
       this.tileProgress.set(tileKey, {
         painted: paintedCount,
         required: requiredCount,
         wrong: wrongCount,
       });
+
+      // Save painted-by-color for this tile and recompute aggregate per-color painted counts
+      this.tileColorPainted.set(tileKey, paintedByColor);
+      const aggregate = {};
+      for (const colorMap of this.tileColorPainted.values()) {
+        if (!colorMap) { continue; }
+        for (const [rgbKey, count] of colorMap.entries()) {
+          aggregate[rgbKey] = (aggregate[rgbKey] || 0) + (count || 0);
+        }
+      }
+      this.colorPaintedByKey = aggregate;
 
       // Aggregate painted/wrong across tiles we've processed
       let aggPainted = 0;
@@ -520,11 +559,159 @@ export default class TemplateManager {
       this.overlay.handleDisplayStatus(
         `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
       );
+      // Notify UI to refresh color list with updated per-color counts
+      try { window.postMessage({ source: 'blue-marble', bmEvent: 'bm-rebuild-color-list' }, '*'); } catch (_) { /* no-op */ }
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);
     }
 
-    return await canvas.convertToBlob({ type: 'image/png' });
+    const outBlob = await canvas.convertToBlob({ type: 'image/png' });
+    try { this.lastProcessedTiles.set(tileKey, outBlob); } catch (_) { /* no-op */ }
+    return outBlob;
+  }
+
+  /** Build a screenshot covering the active template's pixel area by fetching raw tiles and composing them.
+   * The screenshot shows the current board (not overlay) for the area from the template's top-left pixel
+   * to its bottom-right pixel, snapped to tile boundaries as needed.
+   * @param {string} tileServerBase - Base URL to the tile server (ending with /tiles)
+   * @param {[number, number, number, number]} templateCoords - [tileX, tileY, pixelX, pixelY]
+   * @param {[number, number]} sizePx - [width, height] in template pixels to capture
+   * @returns {Promise<Blob>} PNG blob of the composed screenshot
+   */
+  async buildTemplateAreaScreenshot(tileServerBase, templateCoords, sizePx) {
+    try {
+      const active = this.templatesArray?.[0];
+      if (!active || !Array.isArray(templateCoords) || templateCoords.length < 4) {
+        throw new Error('Missing template or coordinates');
+      }
+      const tx = Number(templateCoords[0]);
+      const ty = Number(templateCoords[1]);
+      const px = Number(templateCoords[2]);
+      const py = Number(templateCoords[3]);
+      const width = Number(sizePx?.[0] ?? active.imageWidth ?? 0);
+      const height = Number(sizePx?.[1] ?? active.imageHeight ?? 0);
+      if (!Number.isFinite(tx) || !Number.isFinite(ty) || width <= 0 || height <= 0) {
+        throw new Error('Invalid screenshot dimensions or coords');
+      }
+
+      // Compose in board pixel space (no drawMult scaling)
+      const tileSize = this.tileSize || 1000;
+
+      // Compute the bounding box in board pixel space
+      const startX = tx * tileSize + px;
+      const startY = ty * tileSize + py;
+      const endX = startX + width;
+      const endY = startY + height;
+
+      // Determine all tile coordinates we need to fetch
+      const tileStartX = Math.floor(startX / tileSize);
+      const tileStartY = Math.floor(startY / tileSize);
+      const tileEndX = Math.floor((endX - 1) / tileSize);
+      const tileEndY = Math.floor((endY - 1) / tileSize);
+
+      const canvasW = endX - startX;
+      const canvasH = endY - startY;
+      const canvas = new OffscreenCanvas(canvasW, canvasH);
+      const ctx = canvas.getContext('2d', { willReadFrequently: true });
+      ctx.imageSmoothingEnabled = false;
+      ctx.clearRect(0, 0, canvasW, canvasH);
+
+      // Helper to fetch a tile PNG via GM (caller runs in userscript env)
+      const fetchTile = (x, y) => new Promise((resolve, reject) => {
+        try {
+          const url = `${tileServerBase}/${x}/${y}.png`;
+          // Try GM first
+          if (typeof GM_xmlhttpRequest === 'function') {
+            GM_xmlhttpRequest({
+              method: 'GET',
+              url,
+              responseType: 'blob',
+              onload: (res) => {
+                if (res.status >= 200 && res.status < 300 && res.response) {
+                  resolve(res.response);
+                } else {
+                  // Fallback via Image if GM blocked
+                  const img = new Image();
+                  img.crossOrigin = 'anonymous';
+                  img.onload = async () => {
+                    try {
+                      const c = new OffscreenCanvas(img.width, img.height);
+                      const cx = c.getContext('2d');
+                      cx.imageSmoothingEnabled = false;
+                      cx.drawImage(img, 0, 0);
+                      const b = await c.convertToBlob({ type: 'image/png' });
+                      resolve(b);
+                    } catch (e) { reject(e); }
+                  };
+                  img.onerror = () => reject(new Error('Tile fetch failed (img)'));
+                  img.src = url;
+                }
+              },
+              onerror: () => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = async () => {
+                  try {
+                    const c = new OffscreenCanvas(img.width, img.height);
+                    const cx = c.getContext('2d');
+                    cx.imageSmoothingEnabled = false;
+                    cx.drawImage(img, 0, 0);
+                    const b = await c.convertToBlob({ type: 'image/png' });
+                    resolve(b);
+                  } catch (e) { reject(e); }
+                };
+                img.onerror = () => reject(new Error('Tile fetch failed (img)'));
+                img.src = url;
+              }
+            });
+          } else {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            img.onload = async () => {
+              try {
+                const c = new OffscreenCanvas(img.width, img.height);
+                const cx = c.getContext('2d');
+                cx.imageSmoothingEnabled = false;
+                cx.drawImage(img, 0, 0);
+                const b = await c.convertToBlob({ type: 'image/png' });
+                resolve(b);
+              } catch (e) { reject(e); }
+            };
+            img.onerror = () => reject(new Error('Tile fetch failed (img)'));
+            img.src = url;
+          }
+        } catch (e) { reject(e); }
+      });
+
+      // Iterate required tiles and draw only overlapping regions
+      for (let tyIdx = tileStartY; tyIdx <= tileEndY; tyIdx++) {
+        for (let txIdx = tileStartX; txIdx <= tileEndX; txIdx++) {
+          const tileBlob = await fetchTile(txIdx, tyIdx);
+          const bitmap = await createImageBitmap(tileBlob);
+          // Compute overlap with our screenshot area in board pixels
+          const tileOriginX = txIdx * tileSize;
+          const tileOriginY = tyIdx * tileSize;
+          const srcX = Math.max(0, startX - tileOriginX);
+          const srcY = Math.max(0, startY - tileOriginY);
+          const dstX = Math.max(0, tileOriginX - startX);
+          const dstY = Math.max(0, tileOriginY - startY);
+          const drawW = Math.min(tileSize - srcX, canvasW - dstX);
+          const drawH = Math.min(tileSize - srcY, canvasH - dstY);
+          if (drawW > 0 && drawH > 0) {
+            ctx.drawImage(
+              bitmap,
+              srcX, srcY, drawW, drawH,
+              dstX, dstY, drawW, drawH
+            );
+          }
+        }
+      }
+
+      return await canvas.convertToBlob({ type: 'image/png' });
+    } catch (e) {
+      console.warn('Failed to build template area screenshot', e);
+      throw e;
+    }
   }
 
   /** Imports the JSON object, and appends it to any JSON object already loaded
@@ -567,11 +754,24 @@ export default class TemplateManager {
           const sortID = Number(templateKeyArray?.[0]); // Sort ID of the template
           const authorID = templateKeyArray?.[1] || '0'; // User ID of the person who exported the template
           const displayName = templateValue.name || `Template ${sortID || ''}`; // Display name of the template
-          //const coords = templateValue?.coords?.split(',').map(Number); // "1,2,3,4" -> [1, 2, 3, 4]
+          const coords = templateValue?.coords?.split(',').map(Number); // "1,2,3,4" -> [1, 2, 3, 4]
           const tilesbase64 = templateValue.tiles;
           const templateTiles = {}; // Stores the template bitmap tiles for each tile.
           let requiredPixelCount = 0; // Global required pixel count for this imported template
           const paletteMap = new Map(); // Accumulates color counts across tiles (center pixels only)
+
+          // Build allowed site palette set (exclude Transparent) for key classification
+          const allowedSet = new Set(
+            (Array.isArray(colorpalette) ? colorpalette : [])
+              .filter(c => (c?.name || '').toLowerCase() !== 'transparent' && Array.isArray(c?.rgb))
+              .map(c => `${c.rgb[0]},${c.rgb[1]},${c.rgb[2]}`)
+          );
+
+          // Track bounding box in scaled canvas space to recover original template dimensions
+          let minScaledX = Number.POSITIVE_INFINITY;
+          let minScaledY = Number.POSITIVE_INFINITY;
+          let maxScaledX = 0;
+          let maxScaledY = 0;
 
           for (const tile in tilesbase64) {
             console.log(tile);
@@ -582,6 +782,25 @@ export default class TemplateManager {
               const templateBlob = new Blob([templateUint8Array], { type: "image/png" }); // Uint8Array -> Blob
               const templateBitmap = await createImageBitmap(templateBlob) // Blob -> Bitmap
               templateTiles[tile] = templateBitmap;
+
+              // Update bounding box using key position and bitmap size (in scaled space)
+              try {
+                const [tileXStr, tileYStr, pxStr, pyStr] = tile.split(',');
+                const tileX = Number(tileXStr);
+                const tileY = Number(tileYStr);
+                const px = Number(pxStr);
+                const py = Number(pyStr);
+                const scale = this.drawMult || 3;
+                const tileSizeScaled = (this.tileSize || 1000) * scale;
+                const startScaledX = tileX * tileSizeScaled + px * scale;
+                const startScaledY = tileY * tileSizeScaled + py * scale;
+                const endScaledX = startScaledX + templateBitmap.width;
+                const endScaledY = startScaledY + templateBitmap.height;
+                if (startScaledX < minScaledX) minScaledX = startScaledX;
+                if (startScaledY < minScaledY) minScaledY = startScaledY;
+                if (endScaledX > maxScaledX) maxScaledX = endScaledX;
+                if (endScaledY > maxScaledY) maxScaledY = endScaledY;
+              } catch (_) {}
 
               // Count required pixels in this bitmap (center pixels with alpha >= 64 and not #deface)
               try {
@@ -605,7 +824,8 @@ export default class TemplateManager {
                     if (a < 64) { continue; }
                     if (r === 222 && g === 250 && b === 206) { continue; }
                     requiredPixelCount++;
-                    const key = activeTemplate.allowedColorsSet.has(`${r},${g},${b}`) ? `${r},${g},${b}` : 'other';
+                    const rgbKeyCandidate = `${r},${g},${b}`;
+                    const key = allowedSet.has(rgbKeyCandidate) ? rgbKeyCandidate : 'other';
                     paletteMap.set(key, (paletteMap.get(key) || 0) + 1);
                   }
                 }
@@ -620,10 +840,18 @@ export default class TemplateManager {
             displayName: displayName,
             sortID: sortID || this.templatesArray?.length || 0,
             authorID: authorID || '',
-            //coords: coords
+            coords: Array.isArray(coords) && coords.length === 4 ? coords : undefined
           });
           template.chunked = templateTiles;
           template.requiredPixelCount = requiredPixelCount;
+          // Recover original template image dimensions (in board pixels)
+          try {
+            const scale = this.drawMult || 3;
+            const wScaled = Math.max(0, maxScaledX - minScaledX);
+            const hScaled = Math.max(0, maxScaledY - minScaledY);
+            template.imageWidth = Math.round(wScaled / scale);
+            template.imageHeight = Math.round(hScaled / scale);
+          } catch (_) {}
           // Construct colorPalette from paletteMap
           const paletteObj = {};
           for (const [key, count] of paletteMap.entries()) { paletteObj[key] = { count, enabled: true }; }

@@ -275,7 +275,7 @@ function buildOverlayMain() {
     } catch (_) {}
   };
   
-  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px;'})
+  overlayMain.addDiv({'id': 'bm-overlay', 'style': 'top: 10px; right: 75px; width: fit-content; max-width: 90vw;'})
     .addDiv({'id': 'bm-contain-header'})
       .addDiv({'id': 'bm-bar-drag'}).buildElement()
       .addImg({'alt': 'Blue Marble Icon - Click to minimize/maximize', 'src': 'https://raw.githubusercontent.com/SwingTheVine/Wplace-BlueMarble/main/dist/assets/Favicon.png', 'style': 'cursor: pointer;'}, 
@@ -313,9 +313,9 @@ function buildOverlayMain() {
             // Pre-restore original dimensions when switching to maximized state
             // This ensures smooth transition and prevents layout issues
             if (!isMinimized) {
-              overlay.style.width = "auto";
-              overlay.style.maxWidth = "300px";
-              overlay.style.minWidth = "200px";
+              overlay.style.width = "fit-content";
+              overlay.style.maxWidth = "90vw";
+              overlay.style.minWidth = "260px";
               overlay.style.padding = "10px";
             }
             
@@ -457,9 +457,10 @@ function buildOverlayMain() {
                 dragBar.style.marginBottom = '0.5em';
               }
               
-              // Remove all fixed dimensions to allow responsive behavior
-              // This ensures the overlay can adapt to content changes
-              overlay.style.width = '';
+              // Restore responsive dimensions sized to content
+              overlay.style.width = 'fit-content';
+              overlay.style.maxWidth = '90vw';
+              overlay.style.minWidth = '260px';
               overlay.style.height = '';
             }
             
@@ -551,8 +552,8 @@ function buildOverlayMain() {
       .buildElement()
       // Color filter UI
       .addDiv({'id': 'bm-contain-colorfilter', 'style': 'max-height: 140px; overflow: auto; border: 1px solid rgba(255,255,255,0.1); padding: 4px; border-radius: 4px; display: none;'})
-        .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px;'})
-          .addButton({'id': 'bm-button-colors-enable-all', 'textContent': 'Enable All'}, (instance, button) => {
+        .addDiv({'style': 'display: flex; gap: 6px; margin-bottom: 6px; flex-wrap: nowrap;'})
+          .addButton({'id': 'bm-button-colors-enable-all', 'textContent': 'Enable All', 'style': 'white-space: nowrap;'}, (instance, button) => {
             button.onclick = () => {
               const t = templateManager.templatesArray[0];
               if (!t?.colorPalette) { return; }
@@ -561,7 +562,7 @@ function buildOverlayMain() {
               instance.handleDisplayStatus('Enabled all colors');
             };
           }).buildElement()
-          .addButton({'id': 'bm-button-colors-disable-all', 'textContent': 'Disable All'}, (instance, button) => {
+          .addButton({'id': 'bm-button-colors-disable-all', 'textContent': 'Disable All', 'style': 'white-space: nowrap;'}, (instance, button) => {
             button.onclick = () => {
               const t = templateManager.templatesArray[0];
               if (!t?.colorPalette) { return; }
@@ -632,6 +633,76 @@ function buildOverlayMain() {
               window.open('https://bluemarble.camilledaguin.fr/', '_blank', 'noopener noreferrer');
             });
           }).buildElement()
+          .addButton({'id': 'bm-button-screenshot', 'className': 'bm-help', 'innerHTML': '📸', 'title': 'Screenshot current tile (based on current template coordinates)'},
+            (instance, button) => {
+              button.addEventListener('click', async () => {
+                try {
+                  // Compose screenshot of the active template area from live tiles
+                  const tx = Number(document.querySelector('#bm-input-tx')?.value || '');
+                  const ty = Number(document.querySelector('#bm-input-ty')?.value || '');
+                  const px = Number(document.querySelector('#bm-input-px')?.value || '');
+                  const py = Number(document.querySelector('#bm-input-py')?.value || '');
+                  if (!Number.isFinite(tx) || !Number.isFinite(ty) || !Number.isFinite(px) || !Number.isFinite(py)) {
+                    instance.handleDisplayError('Coordinates are malformed! Click the pin to set coordinates.');
+                    return;
+                  }
+                  const t = templateManager.templatesArray?.[0];
+                  if (!t) {
+                    instance.handleDisplayError('No template loaded.');
+                    return;
+                  }
+                  if (!t.imageWidth || !t.imageHeight) {
+                    // Attempt to infer from chunked tiles if missing
+                    try {
+                      const tiles = Object.keys(t.chunked || {});
+                      if (tiles.length > 0) {
+                        let minScaledX = Infinity, minScaledY = Infinity, maxScaledX = 0, maxScaledY = 0;
+                        const scale = templateManager.drawMult || 3;
+                        const tileSizeScaled = (templateManager.tileSize || 1000) * scale;
+                        for (const key of tiles) {
+                          const bmp = t.chunked[key];
+                          const [tX, tY, pX, pY] = key.split(',').map(Number);
+                          const startX = tX * tileSizeScaled + pX * scale;
+                          const startY = tY * tileSizeScaled + pY * scale;
+                          const endX = startX + bmp.width;
+                          const endY = startY + bmp.height;
+                          if (startX < minScaledX) minScaledX = startX;
+                          if (startY < minScaledY) minScaledY = startY;
+                          if (endX > maxScaledX) maxScaledX = endX;
+                          if (endY > maxScaledY) maxScaledY = endY;
+                        }
+                        t.imageWidth = Math.round((maxScaledX - minScaledX) / scale);
+                        t.imageHeight = Math.round((maxScaledY - minScaledY) / scale);
+                      }
+                    } catch (_) {}
+                  }
+                  if (!t.imageWidth || !t.imageHeight) {
+                    instance.handleDisplayError('Template size unavailable; create or reload the template first.');
+                    return;
+                  }
+                  const base = apiManager?.tileServerBase;
+                  if (!base) {
+                    instance.handleDisplayError('Tile server not detected yet; open the board to load tiles.');
+                    return;
+                  }
+                  const blob = await templateManager.buildTemplateAreaScreenshot(base, [tx, ty, px, py], [t.imageWidth, t.imageHeight]);
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  const ts = new Date().toISOString().replace(/[:.]/g,'-');
+                  a.download = `wplace_template_area_${String(tx).padStart(4,'0')},${String(ty).padStart(4,'0')}_${ts}.png`;
+                  document.body.appendChild(a);
+                  a.click();
+                  a.remove();
+                  setTimeout(() => URL.revokeObjectURL(url), 1000);
+                  instance.handleDisplayStatus(`Saved template area screenshot starting at ${tx},${ty}`);
+                } catch (e) {
+                  console.error(e);
+                  instance.handleDisplayError('Failed to create screenshot');
+                }
+              });
+            }
+          ).buildElement()
         .buildElement()
         .addSmall({'textContent': 'Made by SwingTheVine', 'style': 'margin-top: auto;'}).buildElement()
       .buildElement()
@@ -657,6 +728,9 @@ function buildOverlayMain() {
       row.style.alignItems = 'center';
       row.style.gap = '8px';
       row.style.margin = '4px 0';
+      row.style.whiteSpace = 'nowrap';
+      row.style.overflow = 'hidden';
+      row.style.textOverflow = 'ellipsis';
 
       let swatch = document.createElement('div');
       swatch.style.width = '14px';
@@ -665,7 +739,12 @@ function buildOverlayMain() {
 
       let label = document.createElement('span');
       label.style.fontSize = '12px';
-      let labelText = `${meta.count.toLocaleString()}`;
+      // Determine painted count for this color (numerator)
+      const paintedByKey = templateManager?.colorPaintedByKey || {};
+      const paintedCount = paintedByKey[rgb] || 0;
+      const paintedStr = new Intl.NumberFormat().format(paintedCount);
+      const totalStr = new Intl.NumberFormat().format(meta.count || 0);
+      let labelText = `${paintedStr}/${totalStr}`;
 
       // Special handling for "other" and "transparent"
       if (rgb === 'other') {

@@ -18,6 +18,7 @@ export default class ApiManager {
     this.disableAll = false; // Should the entire userscript be disabled?
     this.coordsTilePixel = []; // Contains the last detected tile/pixel coordinate pair requested
     this.templateCoordsTilePixel = []; // Contains the last "enabled" template coords
+    this.tileServerBase = null; // Remember last seen tile server base URL
   }
 
   /** Determines if the spontaneously received response is something we want.
@@ -44,7 +45,8 @@ export default class ApiManager {
       // Trims endpoint to the second to last non-number, non-null directoy.
       // E.g. "wplace.live/api/pixel/0/0?payload" -> "pixel"
       // E.g. "wplace.live/api/files/s0/tiles/0/0/0.png" -> "tiles"
-      const endpointText = data['endpoint']?.split('?')[0].split('/').filter(s => s && isNaN(Number(s))).filter(s => s && !s.includes('.')).pop();
+      const endpointFull = data['endpoint'] || '';
+      const endpointText = endpointFull.split('?')[0].split('/').filter(s => s && isNaN(Number(s))).filter(s => s && !s.includes('.')).pop();
 
       console.log(`%cBlue Marble%c: Recieved message about "%s"`, 'color: cornflowerblue;', '', endpointText);
 
@@ -119,12 +121,42 @@ export default class ApiManager {
         case 'tiles':
 
           // Runs only if the tile has the template
-          let tileCoordsTile = data['endpoint'].split('/');
+          let tileCoordsTile = endpointFull.split('/');
           tileCoordsTile = [parseInt(tileCoordsTile[tileCoordsTile.length - 2]), parseInt(tileCoordsTile[tileCoordsTile.length - 1].replace('.png', ''))];
+
+          // Persist tile server base URL for screenshot pulls
+          try {
+            const parts = endpointFull.split('?')[0].split('/');
+            const idx = parts.lastIndexOf('tiles');
+            if (idx > 0) {
+              const base = parts.slice(0, idx + 1).join('/');
+              this.tileServerBase = base; // e.g., https://wplace.live/api/files/s0/tiles
+            }
+          } catch (_) {}
           
           const blobUUID = data['blobID'];
           const blobData = data['blobData'];
-          
+
+          // Fast gating: if templates are disabled or no template touches this tile, return original blob
+          try {
+            const tm = this.templateManager;
+            const padded = tileCoordsTile[0].toString().padStart(4,'0') + ',' + tileCoordsTile[1].toString().padStart(4,'0');
+            const touches = Array.isArray(tm.templatesArray) && tm.templatesArray.some(t => {
+              if (!t?.chunked) { return false; }
+              if (t.tilePrefixes && t.tilePrefixes.size > 0) { return t.tilePrefixes.has(padded); }
+              return Object.keys(t.chunked).some(k => k.startsWith(padded));
+            });
+            if (!tm.templatesShouldBeDrawn || !touches) {
+              window.postMessage({
+                source: 'blue-marble',
+                blobID: blobUUID,
+                blobData: blobData,
+                blink: data['blink']
+              });
+              break;
+            }
+          } catch (_) { /* fall through to processing on error */ }
+
           const templateBlob = await this.templateManager.drawTemplateOnTile(blobData, tileCoordsTile);
 
           window.postMessage({

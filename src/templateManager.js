@@ -374,28 +374,30 @@ export default class TemplateManager {
               // Possibly needs to be removed 
               // Handle template transparent pixel (alpha < 64): wrong if board has any site palette color here
               // If the alpha of the center pixel is less than 64...
-              if (templatePixelCenterAlpha < 64) {
-                try {
-                  const activeTemplate = this.templatesArray?.[0];
-                  const tileIdx = (gy * drawSize + gx) * 4;
-                  const pr = tilePixels[tileIdx];
-                  const pg = tilePixels[tileIdx + 1];
-                  const pb = tilePixels[tileIdx + 2];
-                  const pa = tilePixels[tileIdx + 3];
+              // if (templatePixelCenterAlpha < 64) {
+              //   try {
+              //     const activeTemplate = this.templatesArray?.[0];
+              //     const tileIdx = (gy * drawSize + gx) * 4;
+              //     const pr = tilePixels[tileIdx];
+              //     const pg = tilePixels[tileIdx + 1];
+              //     const pb = tilePixels[tileIdx + 2];
+              //     const pa = tilePixels[tileIdx + 3];
 
-                  const key = activeTemplate.allowedColorsSet.has(`${pr},${pg},${pb}`) ? `${pr},${pg},${pb}` : 'other';
+              //     const key = activeTemplate.allowedColorsSet.has(`${pr},${pg},${pb}`) ? `${pr},${pg},${pb}` : 'other';
 
-                  const isSiteColor = activeTemplate?.allowedColorsSet ? activeTemplate.allowedColorsSet.has(key) : false;
+              //     const isSiteColor = activeTemplate?.allowedColorsSet ? activeTemplate.allowedColorsSet.has(key) : false;
                   
-                  // IF the alpha of the center pixel that is placed on the canvas is greater than or equal to 64, AND the pixel is a Wplace palette color, then it is incorrect.
-                  if (pa >= 64 && isSiteColor) {
-                    wrongCount++;
-                  }
-                } catch (ignored) {}
+              //     // IF the alpha of the center pixel that is placed on the canvas is greater than or equal to 64, AND the pixel is a Wplace palette color, then it is incorrect.
+              //     if (pa >= 64 && isSiteColor) {
+              //       wrongCount++;
+              //     }
+              //   } catch (ignored) {}
 
-                continue; // Continue to the next pixel
-              }
-
+              //   continue; // Continue to the next pixel
+              // }
+              // Transparent or non-required template pixel: never counts as wrong.
+              // Only required template pixels (alpha >= 64) can be painted/wrong.
+              if (templatePixelCenterAlpha < 64) { continue; }
               // Treat #deface as Transparent palette color (required and paintable)
               // Ignore non-palette colors (match against allowed set when available) for counting required template pixels
               // try {
@@ -554,8 +556,9 @@ export default class TemplateManager {
       // Turns numbers into formatted number strings. E.g., 1234 -> 1,234 OR 1.234 based on location of user
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
-      const wrongStr = new Intl.NumberFormat().format(totalRequired - aggPainted); // Used to be aggWrong, but that is bugged
-
+      //const wrongStr = new Intl.NumberFormat().format(totalRequired - aggPainted); // Used to be aggWrong, but that is bugged
+      //wrong counts change
+      const wrongStr = new Intl.NumberFormat().format(aggWrong);
       this.overlay.handleDisplayStatus(
         `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
       );

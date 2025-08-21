@@ -352,8 +352,7 @@ export default class TemplateManager {
 
               // Possibly needs to be removed 
               // Handle template transparent pixel (alpha < 64): wrong if board has any site palette color here
-              // If the alpha of the center pixel is less than 64...
-              if (templatePixelCenterAlpha < 64) {
+              if (templatePixelCenterAlpha > 0 && templatePixelCenterAlpha < 64) {
                 try {
                   const activeTemplate = this.templatesArray?.[0];
                   const tileIdx = (gy * drawSize + gx) * 4;
@@ -387,7 +386,6 @@ export default class TemplateManager {
               //     continue; // Skip this pixel if it is not in the allowed palette
               //   }
               // } catch (ignored) {}
-
               requiredCount++;
 
               // Strict center-pixel matching. Treat transparent tile pixels as unpainted (not wrong)
@@ -400,11 +398,10 @@ export default class TemplateManager {
               // IF the alpha of the pixel is less than 64...
               if (realPixelCenterAlpha < 64) {
                 // Unpainted -> neither painted nor wrong
-
                 // ELSE IF the pixel matches the template center pixel color
-              } else if (realPixelRed === templatePixelCenterRed && realPixelCenterGreen === templatePixelCenterGreen && realPixelCenterBlue === templatePixelCenterBlue) {
+              } else if (realPixelRed === templatePixelCenterRed && realPixelCenterGreen === templatePixelCenterGreen && realPixelCenterBlue === templatePixelCenterBlue && templatePixelCenterAlpha == realPixelCenterAlpha && templatePixelCenterAlpha >= 64) {
                 paintedCount++; // ...the pixel is painted correctly
-              } else {
+              } else if (templatePixelCenterAlpha > 0) {
                 wrongCount++; // ...the pixel is NOT painted correctly
               }
             }
@@ -444,10 +441,8 @@ export default class TemplateManager {
           // For every pixel...
           for (let y = 0; y < tempH; y++) {
             for (let x = 0; x < tempW; x++) {
-
               // If this pixel is NOT the center pixel, then skip the pixel
-              if ((x % this.drawMult) !== 1 || (y % this.drawMult) !== 1) { continue; }
-
+              if ((x % this.drawMult) !== 1 || (y % this.drawMult) !== 1) { continue; } // Hide the whole pixel to be able to hide the checkerboard pattern.
               const idx = (y * tempW + x) * 4;
               const r = data[idx];
               const g = data[idx + 1];
@@ -515,10 +510,11 @@ export default class TemplateManager {
       // Turns numbers into formatted number strings. E.g., 1234 -> 1,234 OR 1.234 based on location of user
       const paintedStr = new Intl.NumberFormat().format(aggPainted);
       const requiredStr = new Intl.NumberFormat().format(totalRequired);
-      const wrongStr = new Intl.NumberFormat().format(totalRequired - aggPainted); // Used to be aggWrong, but that is bugged
+      const wrongStr = new Intl.NumberFormat().format(aggWrong);
+      const remainingStr = new Intl.NumberFormat().format(totalRequired - aggPainted + aggWrong);
 
       this.overlay.handleDisplayStatus(
-        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr}`
+        `Displaying ${templateCount} template${templateCount == 1 ? '' : 's'}.\nPainted ${paintedStr} / ${requiredStr} • Wrong ${wrongStr} • Remaining ${remainingStr}`
       );
     } else {
       this.overlay.handleDisplayStatus(`Displaying ${templateCount} templates.`);

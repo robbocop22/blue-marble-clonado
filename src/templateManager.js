@@ -216,7 +216,6 @@ export default class TemplateManager {
    * @since 0.65.77
    */
   async drawTemplateOnTile(tileBlob, tileCoords) {
-    const wrongBlocks = [];
     // Returns early if no templates should be drawn
     if (!this.templatesShouldBeDrawn) {return tileBlob;}
 
@@ -309,6 +308,8 @@ export default class TemplateManager {
     for (const template of templatesToDraw) {
       console.log(`Template:`);
       console.log(template);
+
+      const wrongBlocks = [];
 
       // Compute stats by sampling template center pixels against tile pixels,
       // honoring color enable/disable from the active template's palette
@@ -418,6 +419,24 @@ export default class TemplateManager {
 
       // Draw the template overlay for visual guidance, honoring color filter
       try {
+        if (wrongBlocks.length > 0) {
+            const halfSpan = (this.drawMult - 1) / 2;
+            const path = new Path2D();
+            for (const { gx, gy } of wrongBlocks) {
+                const x0 = gx - halfSpan;
+                const y0 = gy - halfSpan;
+                path.rect(x0, y0, this.drawMult, this.drawMult);
+            }
+            context.save();
+            context.imageSmoothingEnabled = false;
+            context.globalCompositeOperation = 'source-over';
+            context.strokeStyle = '#FF0000';
+            context.lineWidth = 1;
+            context.shadowColor = 'rgba(255,0,0,0.8)';
+            context.shadowBlur = 2;
+            context.stroke(path);
+            context.restore();
+        }
 
         const activeTemplate = this.templatesArray?.[0]; // Get the first template
         const palette = activeTemplate?.colorPalette || {}; // Obtain the color palette of the template
@@ -487,25 +506,6 @@ export default class TemplateManager {
         // Fallback to drawing raw bitmap if filtering fails
         context.drawImage(template.bitmap, Number(template.pixelCoords[0]) * this.drawMult, Number(template.pixelCoords[1]) * this.drawMult);
       }
-    }
-
-    if (wrongBlocks.length > 0) {
-        const halfSpan = (this.drawMult - 1) / 2;
-        const path = new Path2D();
-        for (const { gx, gy } of wrongBlocks) {
-            const x0 = gx - halfSpan;
-            const y0 = gy - halfSpan;
-            path.rect(x0, y0, this.drawMult, this.drawMult);
-        }
-        context.save();
-        context.imageSmoothingEnabled = false;
-        context.globalCompositeOperation = 'source-over';
-        context.strokeStyle = '#FF0000';
-        context.lineWidth = 1;
-        context.shadowColor = 'rgba(255,0,0,0.9)';
-        context.shadowBlur = 2;
-        context.stroke(path);
-        context.restore();
     }
 
     // Save per-tile stats and compute global aggregates across all processed tiles

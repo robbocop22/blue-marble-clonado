@@ -50,7 +50,7 @@ export default class TemplateManager {
     this.encodingBase = '!#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{|}~'; // Characters to use for encoding/decoding
     this.tileSize = 1000; // The number of pixels in a tile. Assumes the tile is square
     this.drawMult = 3; // The enlarged size for each pixel. E.g. when "3", a 1x1 pixel becomes a 1x1 pixel inside a 3x3 area. MUST BE ODD
-    
+
     // Template
     this.canvasTemplate = null; // Our canvas
     this.canvasTemplateZoomed = null; // The template when zoomed out
@@ -78,7 +78,7 @@ export default class TemplateManager {
     // Else, the stored canvas is "stale", get the canvas again
 
     // Attempt to find and destroy the "stale" canvas
-    document.getElementById(this.canvasTemplateID)?.remove(); 
+    document.getElementById(this.canvasTemplateID)?.remove();
 
     const canvasMain = document.querySelector(this.canvasMainID);
 
@@ -216,7 +216,7 @@ export default class TemplateManager {
    * @since 0.65.77
    */
   async drawTemplateOnTile(tileBlob, tileCoords) {
-
+    const wrongBlocks = [];
     // Returns early if no templates should be drawn
     if (!this.templatesShouldBeDrawn) {return tileBlob;}
 
@@ -260,7 +260,7 @@ export default class TemplateManager {
         const matchingTileBlobs = matchingTiles.map(tile => {
 
           const coords = tile.split(','); // [x, y, x, y] Tile/pixel coordinates
-          
+
           return {
             bitmap: template.chunked[tile],
             tileCoords: [coords[0], coords[1]],
@@ -281,7 +281,7 @@ export default class TemplateManager {
     let paintedCount = 0;
     let wrongCount = 0;
     let requiredCount = 0;
-    
+
     const tileBitmap = await createImageBitmap(tileBlob);
 
     const canvas = new OffscreenCanvas(drawSize, drawSize);
@@ -314,7 +314,7 @@ export default class TemplateManager {
       // honoring color enable/disable from the active template's palette
       if (tilePixels) {
         try {
-          
+
           const tempWidth = template.bitmap.width;
           const tempHeight = template.bitmap.height;
           const tempCanvas = new OffscreenCanvas(tempWidth, tempHeight);
@@ -350,7 +350,7 @@ export default class TemplateManager {
               const templatePixelCenterBlue = tData[templatePixelCenter + 2]; // Shread block's center pixel's BLUE value
               const templatePixelCenterAlpha = tData[templatePixelCenter + 3]; // Shread block's center pixel's ALPHA value
 
-              // Possibly needs to be removed 
+              // Possibly needs to be removed
               // Handle template transparent pixel (alpha < 64): wrong if board has any site palette color here
               // If the alpha of the center pixel is less than 64...
               if (templatePixelCenterAlpha < 64) {
@@ -365,10 +365,11 @@ export default class TemplateManager {
                   const key = activeTemplate.allowedColorsSet.has(`${pr},${pg},${pb}`) ? `${pr},${pg},${pb}` : 'other';
 
                   const isSiteColor = activeTemplate?.allowedColorsSet ? activeTemplate.allowedColorsSet.has(key) : false;
-                  
+
                   // IF the alpha of the center pixel that is placed on the canvas is greater than or equal to 64, AND the pixel is a Wplace palette color, then it is incorrect.
                   if (pa >= 64 && isSiteColor) {
                     wrongCount++;
+                    wrongBlocks.push({ gx, gy });
                   }
                 } catch (ignored) {}
 
@@ -406,6 +407,7 @@ export default class TemplateManager {
                 paintedCount++; // ...the pixel is painted correctly
               } else {
                 wrongCount++; // ...the pixel is NOT painted correctly
+                wrongBlocks.push({ gx, gy });
               }
             }
           }
@@ -485,6 +487,25 @@ export default class TemplateManager {
         // Fallback to drawing raw bitmap if filtering fails
         context.drawImage(template.bitmap, Number(template.pixelCoords[0]) * this.drawMult, Number(template.pixelCoords[1]) * this.drawMult);
       }
+    }
+
+    if (wrongBlocks.length > 0) {
+        const halfSpan = (this.drawMult - 1) / 2;
+        const path = new Path2D();
+        for (const { gx, gy } of wrongBlocks) {
+            const x0 = gx - halfSpan;
+            const y0 = gy - halfSpan;
+            path.rect(x0, y0, this.drawMult, this.drawMult);
+        }
+        context.save();
+        context.imageSmoothingEnabled = false;
+        context.globalCompositeOperation = 'source-over';
+        context.strokeStyle = '#FF0000';
+        context.lineWidth = 1;
+        context.shadowColor = 'rgba(255,0,0,0.9)';
+        context.shadowBlur = 2;
+        context.stroke(path);
+        context.restore();
     }
 
     // Save per-tile stats and compute global aggregates across all processed tiles

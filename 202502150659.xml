@@ -1,0 +1,1370 @@
+<battery_usage_stats includes_proc_state_data="true" start_timestamp="1735959696152" end_timestamp="1739599151261" duration="3639455109" battery_capacity="9881.0" discharge_pct="151" discharge_lower="14623.88" discharge_upper="14920.31" discharge_duration="1143434770" battery_remaining="887945513" charge_remaining="-1">
+<aggregate scope="0" power="14551.0">
+<power_components>
+<component id="0" power="1578.91037" duration="25415848" model="1" />
+<component id="1" power="64.99040197222223" model="1" />
+<component id="2" power="241.6917586111111" duration="47239141" model="1" />
+<component id="3" power="3.1389377777777776" duration="30707" model="1" />
+<component id="4" duration="25758011" model="1" />
+<component id="5" duration="110000" model="1" />
+<component id="7" power="42.42694555269792" model="1" />
+<component id="9" power="35.356105802347884" model="1" />
+<component id="11" power="162.24824944444444" duration="32839166" model="1" />
+<component id="12" power="0.5018075833333333" duration="3673290" model="1" />
+<component id="16" power="1.8741854722222224" duration="2702880119" model="1" />
+</power_components>
+</aggregate>
+<aggregate scope="1" power="1712.753557302347">
+<power_components>
+<component id="0" power="1578.91037" duration="25415848" model="1" />
+<component id="1" power="64.99040197222223" model="1" />
+<component id="3" power="3.1389377777777776" duration="30707" model="1" />
+<component id="4" duration="25758011" model="1" />
+<component id="5" duration="110000" model="1" />
+<component id="7" power="42.42694555269792" model="1" />
+<component id="9" power="35.356105802347884" model="1" />
+<component id="11" power="29.855934166666668" model="1" />
+<component id="12" power="0.5018075833333333" duration="18065073" model="1" />
+</power_components>
+</aggregate>
+<uid uid="99022" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99021" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0013669206728096543" model="1" />
+</power_components>
+</uid>
+<uid uid="99020" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0013927173551339927" model="1" />
+</power_components>
+</uid>
+<uid uid="99019" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0015732941314043623" model="1" />
+</power_components>
+</uid>
+<uid uid="99018" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99017" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.705114135126102E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99016" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="9.026815544316566E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99015" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="9.542749190803336E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99014" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0010574616483776877" model="1" />
+</power_components>
+</uid>
+<uid uid="99013" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="8.768848721073181E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99012" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="7.221047781612871E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99011" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.001108953849566269" model="1" />
+</power_components>
+</uid>
+<uid uid="99010" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0012121405788636233" model="1" />
+</power_components>
+</uid>
+<uid uid="99009" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0010316649660533491" model="1" />
+</power_components>
+</uid>
+<uid uid="99008" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="7.736981428099642E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99007" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99006" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99005" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99004" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99003" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99002" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="8.768848721073181E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="99001" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.001108953849566269" model="1" />
+</power_components>
+</uid>
+<uid uid="99000" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.447147311882716E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90014" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90013" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90012" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90011" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90010" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90009" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90008" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90007" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90006" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90005" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90004" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90003" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="6.189180488639331E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="90002" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0012379372611879618" model="1" />
+</power_components>
+</uid>
+<uid uid="90001" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.0018569564735119901" model="1" />
+</power_components>
+</uid>
+<uid uid="90000" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="7" power="0.006035513192754351" model="1" />
+</power_components>
+</uid>
+<uid uid="10448" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="12" power="2.5000000000000004E-7" duration="9" model="1" />
+</power_components>
+</uid>
+<uid uid="10444" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="12" power="4.916666666666667E-6" duration="177" model="1" />
+</power_components>
+</uid>
+<uid uid="10443" highest_drain_package="com.discord" time_in_foreground="0" time_in_background="43895">
+<power_components>
+<component id="1" power="0.49801675" duration="287784" model="1" />
+<component id="1" process_state="2" power="5.753611111111111E-4" duration="269" model="1" />
+<component id="1" process_state="3" power="4.277777777777778E-5" duration="20" model="1" />
+<component id="1" process_state="4" power="0.47841383333333337" duration="223674" model="1" />
+<component id="7" power="0.057386490191042666" model="1" />
+<component id="11" power="0.024524444444444446" duration="485" model="1" />
+<component id="11" process_state="1" power="2.0222222222222223E-4" model="1" />
+<component id="11" process_state="4" power="0.011633333333333334" model="1" />
+<component id="12" power="0.0010263333333333335" duration="36948" model="1" />
+</power_components>
+</uid>
+<uid uid="10441" highest_drain_package="com.google.android.photopicker" time_in_foreground="0" time_in_background="1437">
+<power_components>
+<component id="1" power="0.0054841111111111115" duration="8444" model="1" />
+<component id="1" process_state="4" power="0.0054841111111111115" duration="2564" model="1" />
+<component id="7" power="0.005767430023501421" model="1" />
+</power_components>
+</uid>
+<uid uid="10439" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="12" power="2.8333333333333335E-6" duration="102" model="1" />
+</power_components>
+</uid>
+<uid uid="10438" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="12" power="2.5555555555555557E-6" duration="92" model="1" />
+</power_components>
+</uid>
+<uid uid="10436" highest_drain_package="com.tencent.ig" time_in_foreground="24547927" time_in_background="1300041">
+<power_components>
+<component id="0" power="1542.501557159947" duration="24547927" model="1" />
+<component id="1" power="16.5151525" duration="21419944" model="1" />
+<component id="1" process_state="1" power="16.278189277777777" duration="7610582" model="1" />
+<component id="1" process_state="2" power="0.08203494444444445" duration="38354" model="1" />
+<component id="1" process_state="3" power="6.181388888888889E-4" duration="289" model="1" />
+<component id="1" process_state="4" power="0.13985125" duration="65385" model="1" />
+<component id="4" duration="25685911" model="1" />
+<component id="5" duration="102013" model="1" />
+<component id="7" power="0.7582679837319862" model="1" />
+<component id="9" power="15.29971319437027" duration="86591116" model="1" />
+<component id="11" power="17.581098611111113" duration="5318517" model="1" />
+<component id="11" process_state="1" power="16.660674166666666" model="1" />
+<component id="11" process_state="2" power="0.0081925" model="1" />
+<component id="11" process_state="3" power="0.00813861111111111" model="1" />
+<component id="11" process_state="4" power="0.05779638888888889" model="1" />
+<component id="12" power="0.0314815" duration="1133334" model="1" />
+</power_components>
+</uid>
+<uid uid="10431" highest_drain_package="com.google.android.ondevicepersonalization.services" time_in_foreground="0" time_in_background="521">
+<power_components>
+<component id="1" power="0.005531166666666667" duration="8073" model="1" />
+<component id="1" process_state="4" power="0.005531166666666667" duration="2586" model="1" />
+<component id="7" power="0.004178253228862073" model="1" />
+</power_components>
+</uid>
+<uid uid="10430" highest_drain_package="com.google.android.federatedcompute" time_in_foreground="0" time_in_background="525">
+<power_components>
+<component id="1" power="0.007443333333333334" duration="10912" model="1" />
+<component id="1" process_state="4" power="0.007443333333333334" duration="3480" model="1" />
+<component id="7" power="0.004100863181889058" model="1" />
+</power_components>
+</uid>
+<uid uid="10429" highest_drain_package="com.google.android.cellbroadcastreceiver" time_in_foreground="0" time_in_background="60720">
+<power_components>
+<component id="1" power="0.00814061111111111" duration="11963" model="1" />
+<component id="1" process_state="2" power="8.555555555555556E-6" duration="4" model="1" />
+<component id="1" process_state="4" power="0.008132055555555556" duration="3802" model="1" />
+<component id="7" power="0.004642492347240071" model="1" />
+<component id="12" power="2.25E-6" duration="81" model="1" />
+</power_components>
+</uid>
+<uid uid="10428" highest_drain_package="com.google.android.providers.media.module" time_in_foreground="-1592128033" time_in_background="0">
+<power_components>
+<component id="1" power="0.034898111111111116" duration="55086" model="1" />
+<component id="1" process_state="1" power="0.034898111111111116" duration="16316" model="1" />
+<component id="7" power="0.05303221254161451" model="1" />
+</power_components>
+</uid>
+<uid uid="10423" highest_drain_package="com.google.android.permissioncontroller" time_in_foreground="18071882" time_in_background="19305">
+<power_components>
+<component id="1" power="0.0641025" duration="73145" model="1" />
+<component id="1" process_state="1" power="0.01763727777777778" duration="8246" model="1" />
+<component id="1" process_state="2" power="2.138888888888889E-5" duration="10" model="1" />
+<component id="1" process_state="4" power="0.04644383333333334" duration="21714" model="1" />
+<component id="7" power="1.9337920435602227" model="1" />
+<component id="12" power="8.625000000000001E-5" duration="3105" model="1" />
+</power_components>
+</uid>
+<uid uid="10421" highest_drain_package="com.android.devicelockcontroller" time_in_foreground="0" time_in_background="403">
+<power_components>
+<component id="1" power="0.008748055555555556" duration="13257" model="1" />
+<component id="1" process_state="4" power="0.008748055555555556" duration="4090" model="1" />
+<component id="7" power="0.0034595880083440316" model="1" />
+</power_components>
+</uid>
+<uid uid="10420" highest_drain_package="com.android.rkpdapp" time_in_foreground="484760" time_in_background="11034">
+<power_components>
+<component id="1" power="0.011629138888888889" duration="17956" model="1" />
+<component id="1" process_state="1" power="6.416666666666667E-6" duration="3" model="1" />
+<component id="1" process_state="2" power="2.138888888888889E-6" duration="1" model="1" />
+<component id="1" process_state="4" power="0.011620583333333333" duration="5433" model="1" />
+<component id="7" power="0.03199951988009072" model="1" />
+<component id="11" power="0.0016622222222222223" duration="34" model="1" />
+<component id="11" process_state="4" power="0.0016622222222222223" model="1" />
+<component id="12" power="3.9250000000000005E-5" duration="1413" model="1" />
+</power_components>
+</uid>
+<uid uid="10415" highest_drain_package="com.google.android.ext.services" time_in_foreground="0" time_in_background="-1592090979">
+<power_components>
+<component id="1" power="0.015701583333333335" duration="23444" model="1" />
+<component id="1" process_state="3" power="0.015701583333333335" duration="7341" model="1" />
+<component id="7" power="0.08066470817630506" model="1" />
+</power_components>
+</uid>
+<uid uid="10413" highest_drain_package="com.google.android.healthconnect.controller" time_in_foreground="0" time_in_background="830">
+<power_components>
+<component id="1" power="0.005877666666666667" duration="8486" model="1" />
+<component id="1" process_state="4" power="0.005877666666666667" duration="2748" model="1" />
+<component id="7" power="0.0020598903744634533" model="1" />
+</power_components>
+</uid>
+<uid uid="10410" highest_drain_package="com.google.android.adservices.api" time_in_foreground="76504" time_in_background="154035534">
+<power_components>
+<component id="1" power="0.0076058888888888895" duration="12782" model="1" />
+<component id="1" process_state="2" power="1.6683333333333334E-4" duration="78" model="1" />
+<component id="1" process_state="3" power="4.5986111111111114E-4" duration="215" model="1" />
+<component id="1" process_state="4" power="0.006979194444444445" duration="3263" model="1" />
+<component id="7" power="0.01449257612981337" model="1" />
+</power_components>
+</uid>
+<uid uid="10406" highest_drain_package="com.qti.qcc" time_in_foreground="-1592091065" time_in_background="0">
+<power_components>
+<component id="1" power="0.0105875" duration="17425" model="1" />
+<component id="1" process_state="1" power="0.0105875" duration="4950" model="1" />
+<component id="7" power="0.009130204600534111" model="1" />
+<component id="11" power="5.022222222222223E-4" duration="10" model="1" />
+<component id="11" process_state="1" power="5.022222222222223E-4" model="1" />
+<component id="12" power="1.6666666666666668E-7" duration="6" model="1" />
+</power_components>
+</uid>
+<uid uid="10401" highest_drain_package="com.android.smspush" time_in_foreground="-1592091492" time_in_background="0">
+<power_components>
+<component id="1" power="0.006664777777777778" duration="10097" model="1" />
+<component id="1" process_state="1" power="0.006664777777777778" duration="3116" model="1" />
+<component id="7" power="0.0041266598642133966" model="1" />
+</power_components>
+</uid>
+<uid uid="10400" highest_drain_package="com.qualcomm.qti.workloadclassifier" time_in_foreground="-1592129632" time_in_background="0">
+<power_components>
+<component id="1" power="0.011115805555555556" duration="20116" model="1" />
+<component id="1" process_state="1" power="0.011115805555555556" duration="5197" model="1" />
+<component id="7" power="0.05035350528174722" model="1" />
+</power_components>
+</uid>
+<uid uid="10399" highest_drain_package="com.qti.phone" time_in_foreground="-1592090755" time_in_background="0">
+<power_components>
+<component id="1" power="0.008367333333333334" duration="12914" model="1" />
+<component id="1" process_state="1" power="0.008367333333333334" duration="3912" model="1" />
+<component id="7" power="0.004229846593510751" model="1" />
+</power_components>
+</uid>
+<uid uid="10398" highest_drain_package="com.qualcomm.qtil.btdsda" time_in_foreground="0" time_in_background="140227">
+<power_components>
+<component id="1" power="0.007811222222222223" duration="11579" model="1" />
+<component id="1" process_state="2" power="4.277777777777778E-6" duration="2" model="1" />
+<component id="1" process_state="4" power="0.0078069444444444445" duration="3650" model="1" />
+<component id="7" power="0.004565102300267056" model="1" />
+</power_components>
+</uid>
+<uid uid="10397" highest_drain_package="com.qualcomm.qti.poweroffalarm" time_in_foreground="0" time_in_background="17522">
+<power_components>
+<component id="1" power="0.007520333333333334" duration="11619" model="1" />
+<component id="1" process_state="4" power="0.007520333333333334" duration="3516" model="1" />
+<component id="7" power="0.004255643275835089" model="1" />
+</power_components>
+</uid>
+<uid uid="10396" highest_drain_package="com.qualcomm.qti.powersavemode" time_in_foreground="0" time_in_background="100">
+<power_components>
+<component id="1" power="0.007973777777777778" duration="11835" model="1" />
+<component id="1" process_state="4" power="0.007973777777777778" duration="3728" model="1" />
+<component id="7" power="0.003272435607167458" model="1" />
+</power_components>
+</uid>
+<uid uid="10395" highest_drain_package="com.android.systemui" time_in_foreground="25604826" time_in_background="-1617694596">
+<power_components>
+<component id="1" power="0.5995776111111112" duration="682973" model="1" />
+<component id="1" process_state="1" power="0.15761472222222223" duration="73690" model="1" />
+<component id="1" process_state="3" power="0.4419628888888889" duration="206632" model="1" />
+<component id="4" duration="26659" model="1" />
+<component id="7" power="0.9007430602093077" model="1" />
+<component id="9" power="0.0014698751037940383" duration="58795" model="1" />
+<component id="12" power="0.0025663611111111113" duration="92389" model="1" />
+</power_components>
+</uid>
+<uid uid="10394" highest_drain_package="com.zte.mifavor.launcher" time_in_foreground="410757" time_in_background="-1592509833">
+<power_components>
+<component id="0" power="25.810460985742232" duration="410757" model="1" />
+<component id="1" power="0.9288916388888889" duration="837756" model="1" />
+<component id="1" process_state="1" power="0.007169555555555556" duration="3352" model="1" />
+<component id="1" process_state="3" power="0.9217220833333334" duration="430935" model="1" />
+<component id="7" power="2.0440056879592663" model="1" />
+</power_components>
+</uid>
+<uid uid="10392" highest_drain_package="com.google.android.setupwizard" time_in_foreground="0" time_in_background="1313">
+<power_components>
+<component id="1" power="0.009421805555555557" duration="14008" model="1" />
+<component id="1" process_state="4" power="0.009421805555555557" duration="4405" model="1" />
+<component id="7" power="0.008237335901731712" model="1" />
+</power_components>
+</uid>
+<uid uid="10389" highest_drain_package="com.qualcomm.qti.services.systemhelper:systemhelper_service" time_in_foreground="-1592129163" time_in_background="0">
+<power_components>
+<component id="1" power="0.0068145" duration="11134" model="1" />
+<component id="1" process_state="1" power="0.0068145" duration="3186" model="1" />
+<component id="7" power="0.004797272441186102" model="1" />
+</power_components>
+</uid>
+<uid uid="10388" highest_drain_package="com.zte.heartyservice.strategy" time_in_foreground="0" time_in_background="2943231">
+<power_components>
+<component id="1" power="0.01150936111111111" duration="17802" model="1" />
+<component id="1" process_state="3" power="4.5772222222222227E-4" duration="214" model="1" />
+<component id="1" process_state="4" power="0.011051638888888889" duration="5167" model="1" />
+<component id="7" power="0.039250815536272125" model="1" />
+</power_components>
+</uid>
+<uid uid="10385" highest_drain_package="com.zte.cn.doubleapp" time_in_foreground="0" time_in_background="480">
+<power_components>
+<component id="1" power="0.006320416666666667" duration="9290" model="1" />
+<component id="1" process_state="4" power="0.006320416666666667" duration="2955" model="1" />
+<component id="7" power="0.004926154689347699" model="1" />
+</power_components>
+</uid>
+<uid uid="10384" highest_drain_package="com.qualcomm.qtil.aptxui" time_in_foreground="-1592090821" time_in_background="0">
+<power_components>
+<component id="1" power="0.008944833333333334" duration="13488" model="1" />
+<component id="1" process_state="1" power="0.008944833333333334" duration="4182" model="1" />
+<component id="7" power="0.005364597125401358" model="1" />
+<component id="12" power="5.555555555555556E-8" duration="2" model="1" />
+</power_components>
+</uid>
+<uid uid="10383" highest_drain_package="com.qualcomm.qtil.aptxals" time_in_foreground="-1592090680" time_in_background="0">
+<power_components>
+<component id="1" power="0.010794972222222223" duration="17088" model="1" />
+<component id="1" process_state="1" power="0.010794972222222223" duration="5047" model="1" />
+<component id="7" power="0.006915938785965009" model="1" />
+</power_components>
+</uid>
+<uid uid="10381" highest_drain_package="com.qualcomm.qti.performancemode" time_in_foreground="0" time_in_background="229">
+<power_components>
+<component id="1" power="0.007898916666666667" duration="11629" model="1" />
+<component id="1" process_state="4" power="0.007898916666666667" duration="3693" model="1" />
+<component id="7" power="0.004100863181889058" model="1" />
+</power_components>
+</uid>
+<uid uid="10380" highest_drain_package="com.qti.ltebc" time_in_foreground="0" time_in_background="16913">
+<power_components>
+<component id="1" power="1.711111111111111E-4" duration="612" model="1" />
+<component id="1" process_state="2" power="2.138888888888889E-6" duration="1" model="1" />
+<component id="7" power="0.002372788956538665" model="1" />
+<component id="12" power="8.055555555555557E-7" duration="29" model="1" />
+</power_components>
+</uid>
+<uid uid="10376" highest_drain_package="com.qualcomm.location" time_in_foreground="-1592094369" time_in_background="0">
+<power_components>
+<component id="1" power="0.011100833333333334" duration="17896" model="1" />
+<component id="1" process_state="1" power="0.011100833333333334" duration="5190" model="1" />
+<component id="7" power="0.003579669035477325" model="1" />
+</power_components>
+</uid>
+<uid uid="10375" highest_drain_package="com.google.android.gm" time_in_foreground="0" time_in_background="800259">
+<power_components>
+<component id="1" power="0.05126488888888889" duration="73819" model="1" />
+<component id="1" process_state="2" power="0.0026094444444444446" duration="1220" model="1" />
+<component id="1" process_state="4" power="0.04137252777777778" duration="19343" model="1" />
+<component id="7" power="0.2261218811303201" model="1" />
+<component id="11" power="0.03918888888888889" duration="781" model="1" />
+<component id="11" process_state="1" power="1.9555555555555556E-4" model="1" />
+<component id="11" process_state="4" power="0.025393333333333334" model="1" />
+<component id="12" power="4.4611111111111115E-4" duration="16060" model="1" />
+</power_components>
+</uid>
+<uid uid="10374" highest_drain_package="com.google.android.apps.tachyon" time_in_foreground="0" time_in_background="239381">
+<power_components>
+<component id="1" power="0.08432997222222223" duration="116032" model="1" />
+<component id="1" process_state="2" power="9.689166666666668E-4" duration="453" model="1" />
+<component id="1" process_state="4" power="0.08128847222222223" duration="38005" model="1" />
+<component id="7" power="0.6011901641168074" model="1" />
+<component id="11" power="0.09387333333333334" duration="1860" model="1" />
+<component id="11" process_state="1" power="0.008224444444444444" model="1" />
+<component id="11" process_state="2" power="4.888888888888889E-5" model="1" />
+<component id="11" process_state="4" power="0.08435333333333334" model="1" />
+<component id="12" power="0.001974" duration="71064" model="1" />
+</power_components>
+</uid>
+<uid uid="10373" highest_drain_package="com.google.android.marvin.talkback" time_in_foreground="0" time_in_background="219121">
+<power_components>
+<component id="1" power="0.007522472222222223" duration="10887" model="1" />
+<component id="1" process_state="2" power="3.4222222222222224E-5" duration="16" model="1" />
+<component id="1" process_state="4" power="0.00748825" duration="3501" model="1" />
+<component id="7" power="0.006241583160968772" model="1" />
+<component id="12" power="4.055555555555556E-6" duration="146" model="1" />
+</power_components>
+</uid>
+<uid uid="10372" highest_drain_package="com.google.android.apps.photos" time_in_foreground="75441" time_in_background="26153088">
+<power_components>
+<component id="0" power="4.740435311450272" duration="75441" model="1" />
+<component id="1" power="0.20952341666666668" duration="288179" model="1" />
+<component id="1" process_state="1" power="0.012369194444444445" duration="5783" model="1" />
+<component id="1" process_state="2" power="0.020687333333333335" duration="9672" model="1" />
+<component id="1" process_state="3" power="0.008574805555555556" duration="4009" model="1" />
+<component id="1" process_state="4" power="0.16433938888888888" duration="76834" model="1" />
+<component id="7" power="0.7404252784576522" model="1" />
+<component id="11" power="0.1500111111111111" duration="3005" model="1" />
+<component id="11" process_state="1" power="4.888888888888889E-5" model="1" />
+<component id="11" process_state="2" power="5.444444444444444E-4" model="1" />
+<component id="11" process_state="3" power="0.0014288888888888888" model="1" />
+<component id="11" process_state="4" power="0.14454444444444445" model="1" />
+<component id="12" power="0.04850291666666667" duration="1746105" model="1" />
+</power_components>
+</uid>
+<uid uid="10371" highest_drain_package="com.google.android.apps.maps" time_in_foreground="0" time_in_background="103085">
+<power_components>
+<component id="1" power="0.053893583333333335" duration="69796" model="1" />
+<component id="1" process_state="2" power="1.8394444444444445E-4" duration="86" model="1" />
+<component id="1" process_state="4" power="0.04742986111111111" duration="22175" model="1" />
+<component id="7" power="0.21496729452981608" model="1" />
+<component id="11" power="0.011915555555555556" duration="241" model="1" />
+<component id="11" process_state="4" power="0.009340000000000001" model="1" />
+<component id="12" power="6.30388888888889E-4" duration="22694" model="1" />
+</power_components>
+</uid>
+<uid uid="10367" highest_drain_package="com.google.android.keep" time_in_foreground="0" time_in_background="865387">
+<power_components>
+<component id="1" power="0.006788833333333333" duration="11884" model="1" />
+<component id="1" process_state="2" power="1.6897222222222224E-4" duration="79" model="1" />
+<component id="1" process_state="4" power="0.00598675" duration="2799" model="1" />
+<component id="7" power="0.07923101961983241" model="1" />
+<component id="11" power="0.007622222222222222" duration="151" model="1" />
+<component id="11" process_state="1" power="0.0011511111111111112" model="1" />
+<component id="11" process_state="4" power="0.006422222222222223" model="1" />
+<component id="12" power="9.491111111111112E-4" duration="34168" model="1" />
+</power_components>
+</uid>
+<uid uid="10366" highest_drain_package="com.google.android.youtube" time_in_foreground="0" time_in_background="1983471">
+<power_components>
+<component id="1" power="0.03380513888888889" duration="45207" model="1" />
+<component id="1" process_state="2" power="8.726666666666667E-4" duration="408" model="1" />
+<component id="1" process_state="4" power="0.030660972222222225" duration="14335" model="1" />
+<component id="7" power="0.1174303421518725" model="1" />
+<component id="11" power="0.031193333333333337" duration="618" model="1" />
+<component id="11" process_state="1" power="1.4666666666666666E-4" model="1" />
+<component id="11" process_state="4" power="0.02806888888888889" model="1" />
+<component id="12" power="0.0017213333333333336" duration="61968" model="1" />
+</power_components>
+</uid>
+<uid uid="10365" highest_drain_package="com.google.android.webview:webview_apk" time_in_foreground="0" time_in_background="22169">
+<power_components>
+<component id="1" power="0.020973944444444444" duration="30494" model="1" />
+<component id="1" process_state="2" power="1.925E-5" duration="9" model="1" />
+<component id="1" process_state="4" power="0.02073225" duration="9693" model="1" />
+<component id="7" power="0.02148782706849321" model="1" />
+<component id="11" power="0.020151111111111113" duration="404" model="1" />
+<component id="11" process_state="4" power="0.020053333333333333" model="1" />
+<component id="12" power="3.166666666666667E-5" duration="1140" model="1" />
+</power_components>
+</uid>
+<uid uid="10364" highest_drain_package="com.google.android.tts" time_in_foreground="0" time_in_background="11699">
+<power_components>
+<component id="1" power="0.016041666666666666" duration="25297" model="1" />
+<component id="1" process_state="2" power="1.1977777777777779E-4" duration="56" model="1" />
+<component id="1" process_state="4" power="0.015911194444444447" duration="7439" model="1" />
+<component id="7" power="0.022220149356124135" model="1" />
+<component id="11" power="4.6666666666666666E-4" duration="9" model="1" />
+<component id="11" process_state="4" power="4.6666666666666666E-4" model="1" />
+<component id="12" power="6.302777777777779E-5" duration="2269" model="1" />
+</power_components>
+</uid>
+<uid uid="10363" highest_drain_package="com.android.chrome" time_in_foreground="0" time_in_background="3453663">
+<power_components>
+<component id="1" power="0.1707688888888889" duration="192367" model="1" />
+<component id="1" process_state="2" power="0.0018608333333333335" duration="870" model="1" />
+<component id="1" process_state="3" power="0.004752611111111111" duration="2222" model="1" />
+<component id="1" process_state="4" power="0.16128291666666666" duration="75405" model="1" />
+<component id="7" power="0.4425502795142947" model="1" />
+<component id="11" power="0.09074444444444445" duration="1826" model="1" />
+<component id="11" process_state="1" power="0.015255555555555555" model="1" />
+<component id="11" process_state="3" power="0.006991111111111111" model="1" />
+<component id="11" process_state="4" power="0.06356" model="1" />
+<component id="12" power="6.497222222222223E-5" duration="2339" model="1" />
+</power_components>
+</uid>
+<uid uid="10362" highest_drain_package="com.google.android.accessibility.switchaccess" time_in_foreground="0" time_in_background="232472">
+<power_components>
+<component id="1" power="0.011175694444444445" duration="16145" model="1" />
+<component id="1" process_state="2" power="3.5719444444444443E-4" duration="167" model="1" />
+<component id="1" process_state="4" power="0.01078213888888889" duration="5041" model="1" />
+<component id="7" power="0.01347669266353491" model="1" />
+<component id="12" power="4.111111111111112E-6" duration="148" model="1" />
+</power_components>
+</uid>
+<uid uid="10361" highest_drain_package="com.google.android.inputmethod.latin" time_in_foreground="0" time_in_background="-1627569782">
+<power_components>
+<component id="1" power="0.01847786111111111" duration="29659" model="1" />
+<component id="1" process_state="2" power="0.013558416666666667" duration="6339" model="1" />
+<component id="1" process_state="3" power="8.641111111111112E-4" duration="404" model="1" />
+<component id="1" process_state="4" power="0.0038885" duration="1818" model="1" />
+<component id="7" power="0.061561202698801394" model="1" />
+<component id="11" power="0.0508" duration="996" model="1" />
+<component id="11" process_state="2" power="0.031762222222222226" model="1" />
+<component id="11" process_state="3" power="3.888888888888889E-4" model="1" />
+<component id="11" process_state="4" power="0.017982222222222226" model="1" />
+<component id="12" power="0.001548277777777778" duration="55738" model="1" />
+</power_components>
+</uid>
+<uid uid="10359" highest_drain_package="com.google.android.videos" time_in_foreground="0" time_in_background="682143">
+<power_components>
+<component id="1" power="0.00768075" duration="11076" model="1" />
+<component id="1" process_state="2" power="4.3847222222222226E-4" duration="205" model="1" />
+<component id="1" process_state="4" power="0.005775000000000001" duration="2700" model="1" />
+<component id="7" power="0.0549181017647138" model="1" />
+<component id="11" power="0.007668888888888889" duration="151" model="1" />
+<component id="11" process_state="1" power="6.0E-4" model="1" />
+<component id="11" process_state="4" power="0.00598" model="1" />
+<component id="12" power="5.991666666666667E-4" duration="21570" model="1" />
+</power_components>
+</uid>
+<uid uid="10357" highest_drain_package="com.google.android.apps.docs" time_in_foreground="0" time_in_background="733149">
+<power_components>
+<component id="1" power="0.12041516666666667" duration="109814" model="1" />
+<component id="1" process_state="2" power="0.001871527777777778" duration="875" model="1" />
+<component id="1" process_state="4" power="0.1123045" duration="52506" model="1" />
+<component id="7" power="0.25223783533471983" model="1" />
+<component id="11" power="0.05546444444444445" duration="1103" model="1" />
+<component id="11" process_state="1" power="0.0011933333333333334" model="1" />
+<component id="11" process_state="2" power="9.777777777777778E-5" model="1" />
+<component id="11" process_state="4" power="0.03999333333333333" model="1" />
+<component id="12" power="1.3997222222222224E-4" duration="5039" model="1" />
+</power_components>
+</uid>
+<uid uid="10353" highest_drain_package="com.google.android.apps.youtube.music" time_in_foreground="0" time_in_background="2545289">
+<power_components>
+<component id="1" power="0.029784027777777777" duration="40748" model="1" />
+<component id="1" process_state="2" power="1.561388888888889E-4" duration="73" model="1" />
+<component id="1" process_state="4" power="0.027899666666666666" duration="13044" model="1" />
+<component id="7" power="0.11230499660959686" model="1" />
+<component id="11" power="0.006275555555555555" duration="124" model="1" />
+<component id="11" process_state="1" power="9.777777777777778E-5" model="1" />
+<component id="11" process_state="4" power="0.005306666666666667" model="1" />
+<component id="12" power="7.399722222222223E-4" duration="26639" model="1" />
+</power_components>
+</uid>
+<uid uid="10352" highest_drain_package="com.google.android.calendar" time_in_foreground="0" time_in_background="929596">
+<power_components>
+<component id="1" power="0.03861977777777778" duration="53437" model="1" />
+<component id="1" process_state="2" power="4.448888888888889E-4" duration="208" model="1" />
+<component id="1" process_state="4" power="0.03528952777777778" duration="16499" model="1" />
+<component id="7" power="0.20021594226907855" model="1" />
+<component id="11" power="0.020868888888888888" duration="415" model="1" />
+<component id="11" process_state="1" power="1.4666666666666666E-4" model="1" />
+<component id="11" process_state="4" power="0.017302222222222222" model="1" />
+<component id="12" power="5.719166666666668E-4" duration="20589" model="1" />
+</power_components>
+</uid>
+<uid uid="10350" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="11" power="0.027833333333333335" duration="552" model="1" />
+<component id="11" process_state="1" power="0.027833333333333335" model="1" />
+</power_components>
+</uid>
+<uid uid="10349" highest_drain_package="com.google.android.googlequicksearchbox:search" time_in_foreground="3344" time_in_background="-1592204945">
+<power_components>
+<component id="0" power="0.2101246759916983" duration="3344" model="1" />
+<component id="1" power="0.4315486388888889" duration="570600" model="1" />
+<component id="1" process_state="1" power="9.753333333333334E-4" duration="456" model="1" />
+<component id="1" process_state="2" power="8.555555555555556E-6" duration="4" model="1" />
+<component id="1" process_state="3" power="0.4268345277777778" duration="199559" model="1" />
+<component id="1" process_state="4" power="2.3527777777777777E-5" duration="11" model="1" />
+<component id="4" duration="3747" model="1" />
+<component id="7" power="4.07626417376879" model="1" />
+<component id="11" power="0.5498000000000001" duration="10896" model="1" />
+<component id="11" process_state="1" power="0.14641555555555555" model="1" />
+<component id="11" process_state="3" power="0.39976" model="1" />
+<component id="12" power="0.005119444444444445" duration="184300" model="1" />
+</power_components>
+</uid>
+<uid uid="10348" highest_drain_package="com.google.android.gms.persistent" time_in_foreground="30508" time_in_background="-1592179259">
+<power_components>
+<component id="1" power="1.9749066944444444" duration="2350091" model="1" />
+<component id="1" process_state="1" power="0.0011892222222222224" duration="556" model="1" />
+<component id="1" process_state="2" power="0.03980686111111111" duration="18611" model="1" />
+<component id="1" process_state="3" power="1.9317332222222223" duration="903148" model="1" />
+<component id="1" process_state="4" power="0.002177388888888889" duration="1018" model="1" />
+<component id="7" power="21.240148366814612" model="1" />
+<component id="11" power="3.324675555555556" duration="65548" model="1" />
+<component id="11" process_state="1" power="0.0038244444444444445" model="1" />
+<component id="11" process_state="2" power="0.004968888888888889" model="1" />
+<component id="11" process_state="3" power="3.31432" model="1" />
+<component id="11" process_state="4" power="0.0015622222222222222" model="1" />
+<component id="12" power="0.024127361111111113" duration="868585" model="1" />
+</power_components>
+</uid>
+<uid uid="10347" highest_drain_package="com.android.vending:background" time_in_foreground="51713" time_in_background="40069257">
+<power_components>
+<component id="0" power="3.2360079811293274" duration="51499" model="1" />
+<component id="1" power="2.142443722222222" duration="2884088" model="1" />
+<component id="1" process_state="1" power="0.025033555555555555" duration="11704" model="1" />
+<component id="1" process_state="2" power="0.9515938055555556" duration="444901" model="1" />
+<component id="1" process_state="3" power="0.02002" duration="9360" model="1" />
+<component id="1" process_state="4" power="1.1384407222222224" duration="532258" model="1" />
+<component id="7" power="4.830211061466259" model="1" />
+<component id="11" power="4.474644444444444" duration="89864" model="1" />
+<component id="11" process_state="1" power="0.001591111111111111" model="1" />
+<component id="11" process_state="2" power="1.597471111111111" model="1" />
+<component id="11" process_state="3" power="0.030526666666666667" model="1" />
+<component id="11" process_state="4" power="2.8346155555555557" model="1" />
+<component id="12" power="0.2399053888888889" duration="8636594" model="1" />
+</power_components>
+</uid>
+<uid uid="10346" highest_drain_package="com.google.android.as" time_in_foreground="0" time_in_background="-1592128182">
+<power_components>
+<component id="1" power="0.028211944444444446" duration="40507" model="1" />
+<component id="1" process_state="3" power="0.028211944444444446" duration="13190" model="1" />
+<component id="3" power="3.1389377777777776" duration="30707" model="1" />
+<component id="7" power="0.31848260274556006" model="1" />
+<component id="9" power="6.994083523750305E-4" duration="14811" model="1" />
+<component id="12" power="6.813888888888889E-5" duration="2453" model="1" />
+</power_components>
+</uid>
+<uid uid="10345" highest_drain_package="com.android.settings.intelligence" time_in_foreground="0" time_in_background="588">
+<power_components>
+<component id="1" power="0.007282916666666667" duration="11640" model="1" />
+<component id="1" process_state="4" power="0.007282916666666667" duration="3405" model="1" />
+<component id="7" power="0.014159647182639259" model="1" />
+</power_components>
+</uid>
+<uid uid="10344" highest_drain_package="com.google.android.partnersetup" time_in_foreground="0" time_in_background="68033">
+<power_components>
+<component id="1" power="0.012869694444444446" duration="20753" model="1" />
+<component id="1" process_state="2" power="1.0694444444444444E-5" duration="5" model="1" />
+<component id="1" process_state="4" power="0.012859" duration="6012" model="1" />
+<component id="7" power="0.13102175417915563" model="1" />
+<component id="12" power="2.8025E-4" duration="10089" model="1" />
+</power_components>
+</uid>
+<uid uid="10343" highest_drain_package="com.google.android.as.oss" time_in_foreground="0" time_in_background="489">
+<power_components>
+<component id="1" power="0.004380444444444445" duration="6177" model="1" />
+<component id="1" process_state="4" power="0.004380444444444445" duration="2048" model="1" />
+<component id="7" power="0.003069198215835709" model="1" />
+<component id="12" power="3.3333333333333335E-7" duration="12" model="1" />
+</power_components>
+</uid>
+<uid uid="10342" highest_drain_package="com.google.android.onetimeinitializer" time_in_foreground="0" time_in_background="727">
+<power_components>
+<component id="1" power="0.005437055555555556" duration="8188" model="1" />
+<component id="1" process_state="4" power="0.005437055555555556" duration="2542" model="1" />
+<component id="7" power="0.0041266598642133966" model="1" />
+</power_components>
+</uid>
+<uid uid="10340" highest_drain_package="com.google.android.apps.wellbeing" time_in_foreground="0" time_in_background="-1592226856">
+<power_components>
+<component id="1" power="0.04410602777777778" duration="70925" model="1" />
+<component id="1" process_state="3" power="0.044063250000000005" duration="20601" model="1" />
+<component id="7" power="0.6585917276634042" model="1" />
+<component id="12" power="4.458333333333334E-4" duration="16050" model="1" />
+</power_components>
+</uid>
+<uid uid="10339" highest_drain_package="com.google.android.apps.safetyhub" time_in_foreground="0" time_in_background="93197">
+<power_components>
+<component id="1" power="0.024458194444444446" duration="37925" model="1" />
+<component id="1" process_state="2" power="6.630555555555556E-5" duration="31" model="1" />
+<component id="1" process_state="4" power="0.02366038888888889" duration="11062" model="1" />
+<component id="7" power="0.09313644302725183" model="1" />
+<component id="12" power="1.2294444444444446E-4" duration="4426" model="1" />
+</power_components>
+</uid>
+<uid uid="10338" highest_drain_package="com.google.android.configupdater" time_in_foreground="0" time_in_background="9140">
+<power_components>
+<component id="1" power="0.009821777777777778" duration="14452" model="1" />
+<component id="1" process_state="3" power="4.277777777777778E-6" duration="2" model="1" />
+<component id="1" process_state="4" power="0.0098175" duration="4590" model="1" />
+<component id="7" power="0.01859586723474472" model="1" />
+<component id="12" power="2.377777777777778E-5" duration="856" model="1" />
+</power_components>
+</uid>
+<uid uid="10337" highest_drain_package="com.android.contacts" time_in_foreground="0" time_in_background="166">
+<power_components>
+<component id="1" power="0.005614583333333333" duration="8490" model="1" />
+<component id="1" process_state="4" power="0.005614583333333333" duration="2625" model="1" />
+<component id="7" power="0.0042040499111864115" model="1" />
+</power_components>
+</uid>
+<uid uid="10336" highest_drain_package="com.google.android.apps.restore" time_in_foreground="0" time_in_background="422233">
+<power_components>
+<component id="1" power="0.012326416666666668" duration="18376" model="1" />
+<component id="1" process_state="2" power="2.3527777777777777E-5" duration="11" model="1" />
+<component id="1" process_state="3" power="1.2833333333333333E-4" duration="60" model="1" />
+<component id="1" process_state="4" power="0.011710416666666668" duration="5475" model="1" />
+<component id="7" power="0.02122662301452677" model="1" />
+<component id="12" power="4.222222222222223E-6" duration="152" model="1" />
+</power_components>
+</uid>
+<uid uid="10335" highest_drain_package="com.google.android.apps.setupwizard.searchselector" time_in_foreground="0" time_in_background="2210">
+<power_components>
+<component id="1" power="0.007541722222222222" duration="11277" model="1" />
+<component id="1" process_state="4" power="0.007541722222222222" duration="3526" model="1" />
+<component id="7" power="0.0070152813037787365" model="1" />
+</power_components>
+</uid>
+<uid uid="10334" highest_drain_package="com.google.android.apps.turbo:aab" time_in_foreground="0" time_in_background="60368">
+<power_components>
+<component id="1" power="0.03827327777777778" duration="55709" model="1" />
+<component id="1" process_state="2" power="1.7111111111111112E-5" duration="8" model="1" />
+<component id="1" process_state="4" power="0.03825616666666667" duration="17886" model="1" />
+<component id="7" power="0.12150328421877521" model="1" />
+<component id="12" power="1.501388888888889E-4" duration="5405" model="1" />
+</power_components>
+</uid>
+<uid uid="10333" highest_drain_package=".qtidataservices" time_in_foreground="-1592090642" time_in_background="0">
+<power_components>
+<component id="1" power="0.02027238888888889" duration="32317" model="1" />
+<component id="1" process_state="1" power="0.02027238888888889" duration="9478" model="1" />
+<component id="7" power="0.041495936206170335" model="1" />
+</power_components>
+</uid>
+<uid uid="10332" highest_drain_package=".qms" time_in_foreground="-1592090672" time_in_background="0">
+<power_components>
+<component id="1" power="0.012518916666666668" duration="19894" model="1" />
+<component id="1" process_state="1" power="0.012518916666666668" duration="5853" model="1" />
+<component id="7" power="0.02841944619077301" model="1" />
+</power_components>
+</uid>
+<uid uid="10331" highest_drain_package="com.qualcomm.qti.biometrics.fingerprint.service" time_in_foreground="0" time_in_background="157">
+<power_components>
+<component id="1" power="0.006147166666666667" duration="8912" model="1" />
+<component id="1" process_state="4" power="0.006147166666666667" duration="2874" model="1" />
+<component id="7" power="0.004049269817240381" model="1" />
+</power_components>
+</uid>
+<uid uid="10329" highest_drain_package="com.qualcomm.timeservice" time_in_foreground="0" time_in_background="935">
+<power_components>
+<component id="1" power="0.005535444444444444" duration="8537" model="1" />
+<component id="1" process_state="4" power="0.005535444444444444" duration="2588" model="1" />
+<component id="7" power="0.004694085711888748" model="1" />
+<component id="12" power="1.5000000000000002E-6" duration="54" model="1" />
+</power_components>
+</uid>
+<uid uid="10318" highest_drain_package="cn.nubia.magicelvesbroadcast.initservice" time_in_foreground="0" time_in_background="416">
+<power_components>
+<component id="1" duration="161" model="1" />
+<component id="7" power="7.479014604856257E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="10317" highest_drain_package="com.google.android.apps.walletnfcrel" time_in_foreground="0" time_in_background="932419">
+<power_components>
+<component id="1" power="0.03226727777777778" duration="44558" model="1" />
+<component id="1" process_state="2" power="3.379444444444445E-4" duration="158" model="1" />
+<component id="1" process_state="4" power="0.02808575" duration="13131" model="1" />
+<component id="7" power="0.14532697558087224" model="1" />
+<component id="11" power="0.03746222222222222" duration="745" model="1" />
+<component id="11" process_state="1" power="4.888888888888889E-5" model="1" />
+<component id="11" process_state="2" power="7.111111111111111E-4" model="1" />
+<component id="11" process_state="4" power="0.029035555555555558" model="1" />
+<component id="12" power="3.715277777777778E-4" duration="13375" model="1" />
+</power_components>
+</uid>
+<uid uid="10311" highest_drain_package="cn.nubia.colorfullight" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.005385722222222222" duration="8033" model="1" />
+<component id="1" process_state="4" power="0.005385722222222222" duration="2518" model="1" />
+<component id="7" power="0.004049269817240381" model="1" />
+</power_components>
+</uid>
+<uid uid="10307" highest_drain_package="com.android.printspooler" time_in_foreground="15422" time_in_background="13">
+<power_components>
+<component id="1" power="0.007366333333333333" duration="11244" model="1" />
+<component id="1" process_state="4" power="0.007366333333333333" duration="3444" model="1" />
+<component id="7" power="0.004229846593510751" model="1" />
+</power_components>
+</uid>
+<uid uid="10306" highest_drain_package="cn.nubia.gamehelpmodule" time_in_foreground="0" time_in_background="32592">
+<power_components>
+<component id="1" power="0.009776861111111111" duration="12249" model="1" />
+<component id="1" process_state="4" power="0.009235722222222223" duration="4318" model="1" />
+<component id="7" power="0.013437441241017877" model="1" />
+</power_components>
+</uid>
+<uid uid="10304" highest_drain_package="cn.zte.gamefloat" time_in_foreground="0" time_in_background="25645">
+<power_components>
+<component id="1" power="0.012001305555555557" duration="16843" model="1" />
+<component id="1" process_state="2" power="4.277777777777778E-6" duration="2" model="1" />
+<component id="1" process_state="4" power="0.011997027777777778" duration="5609" model="1" />
+<component id="7" power="0.009181797965182788" model="1" />
+</power_components>
+</uid>
+<uid uid="10302" highest_drain_package="com.zte.weather" time_in_foreground="0" time_in_background="11913">
+<power_components>
+<component id="1" power="0.05585922222222223" duration="86199" model="1" />
+<component id="1" process_state="2" power="6.630555555555556E-5" duration="31" model="1" />
+<component id="1" process_state="4" power="0.053968444444444444" duration="25232" model="1" />
+<component id="7" power="0.11915194191577677" model="1" />
+<component id="11" power="0.00802" duration="162" model="1" />
+<component id="11" process_state="1" power="3.422222222222222E-4" model="1" />
+<component id="11" process_state="4" power="0.006024444444444445" model="1" />
+<component id="12" power="7.833333333333333E-6" duration="282" model="1" />
+</power_components>
+</uid>
+<uid uid="10301" highest_drain_package="cn.nubia.identity" time_in_foreground="0" time_in_background="132676">
+<power_components>
+<component id="1" power="0.005635972222222223" duration="8551" model="1" />
+<component id="1" process_state="4" power="0.005635972222222223" duration="2635" model="1" />
+<component id="7" power="0.004018414961911271" model="1" />
+</power_components>
+</uid>
+<uid uid="10300" highest_drain_package="cn.nubia.gamepad" time_in_foreground="0" time_in_background="-1599173768">
+<power_components>
+<component id="1" power="0.0174405" duration="27988" model="1" />
+<component id="1" process_state="3" power="0.017273666666666666" duration="8076" model="1" />
+<component id="1" process_state="4" power="1.6683333333333334E-4" duration="78" model="1" />
+<component id="7" power="0.02122662301452677" model="1" />
+</power_components>
+</uid>
+<uid uid="10298" highest_drain_package="cn.nubia.gamehelperline" time_in_foreground="0" time_in_background="24549934">
+<power_components>
+<component id="1" power="0.012775583333333333" duration="19104" model="1" />
+<component id="1" process_state="3" power="2.3955555555555557E-4" duration="112" model="1" />
+<component id="1" process_state="4" power="0.012536027777777778" duration="5861" model="1" />
+<component id="7" power="0.01692808643161121" model="1" />
+</power_components>
+</uid>
+<uid uid="10297" highest_drain_package="com.android.traceur" time_in_foreground="0" time_in_background="73723">
+<power_components>
+<component id="1" power="0.007107527777777778" duration="10749" model="1" />
+<component id="1" process_state="2" power="2.138888888888889E-6" duration="1" model="1" />
+<component id="1" process_state="4" power="0.007105388888888889" duration="3322" model="1" />
+<component id="7" power="0.004513508935618379" model="1" />
+<component id="12" power="8.333333333333334E-7" duration="30" model="1" />
+</power_components>
+</uid>
+<uid uid="10296" highest_drain_package="com.google.android.captiveportallogin" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="1.0694444444444445E-4" duration="139" model="1" />
+<component id="1" process_state="4" power="1.0694444444444445E-4" duration="50" model="1" />
+</power_components>
+</uid>
+<uid uid="10294" highest_drain_package="cn.nubia.gamelab" time_in_foreground="0" time_in_background="13888573">
+<power_components>
+<component id="1" power="0.5223594444444445" duration="1110807" model="1" />
+<component id="1" process_state="2" power="2.7805555555555558E-5" duration="13" model="1" />
+<component id="1" process_state="3" power="0.5198526666666667" duration="243048" model="1" />
+<component id="1" process_state="4" power="2.566666666666667E-5" duration="12" model="1" />
+<component id="7" power="0.011437945452231405" model="1" />
+</power_components>
+</uid>
+<uid uid="10291" highest_drain_package="com.dts.dtsxultra" time_in_foreground="0" time_in_background="1695">
+<power_components>
+<component id="1" power="0.01110725" duration="17104" model="1" />
+<component id="1" process_state="4" power="0.01110725" duration="5193" model="1" />
+<component id="7" power="0.007737487245400118" model="1" />
+</power_components>
+</uid>
+<uid uid="10287" highest_drain_package="cn.nubia.gamehighlights:ark_service" time_in_foreground="0" time_in_background="38236">
+<power_components>
+<component id="1" power="7.165277777777778E-4" duration="1188" model="1" />
+<component id="1" process_state="2" power="2.566666666666667E-5" duration="12" model="1" />
+<component id="7" power="0.009104509081669867" model="1" />
+</power_components>
+</uid>
+<uid uid="10285" highest_drain_package="com.zoem.rt" time_in_foreground="0" time_in_background="247419">
+<power_components>
+<component id="1" power="0.10242497222222223" duration="123626" model="1" />
+<component id="1" process_state="2" power="6.908611111111112E-4" duration="323" model="1" />
+<component id="1" process_state="4" power="0.100331" duration="46908" model="1" />
+<component id="7" power="0.3024970562716581" model="1" />
+<component id="11" power="0.15309555555555557" duration="3037" model="1" />
+<component id="11" process_state="1" power="0.0022266666666666667" model="1" />
+<component id="11" process_state="2" power="5.377777777777778E-4" model="1" />
+<component id="11" process_state="4" power="0.13788666666666669" model="1" />
+<component id="12" power="0.002367055555555556" duration="85214" model="1" />
+</power_components>
+</uid>
+<uid uid="10284" highest_drain_package="cn.nubia.touping" time_in_foreground="0" time_in_background="226">
+<power_components>
+<component id="1" duration="121" model="1" />
+<component id="7" power="8.252915074586411E-4" model="1" />
+</power_components>
+</uid>
+<uid uid="10281" highest_drain_package="com.zte.zdm" time_in_foreground="0" time_in_background="-1685372169">
+<power_components>
+<component id="1" power="0.023897805555555558" duration="34711" model="1" />
+<component id="1" process_state="2" power="0.020864861111111112" duration="9755" model="1" />
+<component id="1" process_state="4" power="0.0030329444444444444" duration="1418" model="1" />
+<component id="7" power="0.11147383762145267" model="1" />
+<component id="11" power="0.007084444444444444" duration="140" model="1" />
+<component id="11" process_state="1" power="3.9777777777777777E-4" model="1" />
+<component id="11" process_state="2" power="0.003702222222222222" model="1" />
+<component id="11" process_state="4" power="0.0029844444444444445" model="1" />
+<component id="12" power="2.1966666666666668E-4" duration="7908" model="1" />
+</power_components>
+</uid>
+<uid uid="10277" highest_drain_package="com.google.android.documentsui" time_in_foreground="0" time_in_background="60054">
+<power_components>
+<component id="1" power="0.008542722222222222" duration="12248" model="1" />
+<component id="1" process_state="4" power="0.008542722222222222" duration="3994" model="1" />
+<component id="7" power="0.046880057879370114" model="1" />
+<component id="12" power="7.000000000000001E-6" duration="252" model="1" />
+</power_components>
+</uid>
+<uid uid="10275" highest_drain_package="com.zte.thermalbridge" time_in_foreground="-1592129446" time_in_background="0">
+<power_components>
+<component id="1" power="0.08044361111111112" duration="96168" model="1" />
+<component id="1" process_state="1" power="0.08044361111111112" duration="37610" model="1" />
+<component id="7" power="0.004152456546537736" model="1" />
+</power_components>
+</uid>
+<uid uid="10273" highest_drain_package="android.process.acore" time_in_foreground="13405" time_in_background="4066262">
+<power_components>
+<component id="1" power="0.009272083333333334" duration="13835" model="1" />
+<component id="1" process_state="1" power="2.3527777777777777E-5" duration="11" model="1" />
+<component id="1" process_state="2" power="9.625000000000001E-5" duration="45" model="1" />
+<component id="1" process_state="3" power="3.892777777777778E-4" duration="182" model="1" />
+<component id="1" process_state="4" power="0.008763027777777778" duration="4097" model="1" />
+<component id="7" power="0.04016159016751142" model="1" />
+<component id="12" power="3.777777777777778E-6" duration="136" model="1" />
+</power_components>
+</uid>
+<uid uid="10272" highest_drain_package="com.android.managedprovisioning" time_in_foreground="0" time_in_background="253">
+<power_components>
+<component id="1" power="0.005537583333333334" duration="8184" model="1" />
+<component id="1" process_state="4" power="0.005537583333333334" duration="2589" model="1" />
+<component id="7" power="0.004100863181889058" model="1" />
+</power_components>
+</uid>
+<uid uid="10271" highest_drain_package="com.google.android.packageinstaller" time_in_foreground="0" time_in_background="312">
+<power_components>
+<component id="1" power="0.005417805555555556" duration="7909" model="1" />
+<component id="1" process_state="4" power="0.005417805555555556" duration="2533" model="1" />
+<component id="7" power="0.004152456546537736" model="1" />
+</power_components>
+</uid>
+<uid uid="10270" highest_drain_package="cn.nubia.fan" time_in_foreground="-1617505325" time_in_background="25414427">
+<power_components>
+<component id="1" power="0.014608611111111112" duration="21610" model="1" />
+<component id="1" process_state="1" power="0.014230027777777779" duration="6653" model="1" />
+<component id="1" process_state="3" power="3.7858333333333336E-4" duration="177" model="1" />
+<component id="7" power="0.01107982680349353" model="1" />
+</power_components>
+</uid>
+<uid uid="10268" highest_drain_package="cn.nubia.redmagickyi" time_in_foreground="0" time_in_background="2252">
+<power_components>
+<component id="1" power="0.009158722222222223" duration="14213" model="1" />
+<component id="1" process_state="4" power="0.009158722222222223" duration="4282" model="1" />
+<component id="7" power="0.006293176525617449" model="1" />
+</power_components>
+</uid>
+<uid uid="10263" highest_drain_package="com.android.providers.calendar" time_in_foreground="0" time_in_background="1900597410">
+<power_components>
+<component id="1" power="0.010735083333333334" duration="24977" model="1" />
+<component id="1" process_state="2" power="0.007678611111111112" duration="3590" model="1" />
+<component id="1" process_state="3" power="2.0961111111111113E-4" duration="98" model="1" />
+<component id="1" process_state="4" power="0.002846861111111111" duration="1331" model="1" />
+<component id="7" power="0.13757481963375828" model="1" />
+<component id="12" power="9.197222222222224E-5" duration="3311" model="1" />
+</power_components>
+</uid>
+<uid uid="10261" highest_drain_package="cn.zte.chargeseparation" time_in_foreground="-1617505328" time_in_background="25414386">
+<power_components>
+<component id="1" power="0.017919611111111112" duration="21828" model="1" />
+<component id="1" process_state="1" power="0.017699305555555555" duration="8275" model="1" />
+<component id="1" process_state="3" power="2.2030555555555556E-4" duration="103" model="1" />
+<component id="7" power="0.004745679076537426" model="1" />
+</power_components>
+</uid>
+<uid uid="10260" highest_drain_package="com.zte.faceverify:service" time_in_foreground="-1592129343" time_in_background="0">
+<power_components>
+<component id="1" power="0.020689472222222224" duration="30905" model="1" />
+<component id="1" process_state="1" power="0.020689472222222224" duration="9673" model="1" />
+<component id="7" power="0.01253475968658622" model="1" />
+<component id="9" power="0.0032170445192605257" duration="91032" model="1" />
+</power_components>
+</uid>
+<uid uid="10255" highest_drain_package="com.zte.aiengine" time_in_foreground="-1592129720" time_in_background="0">
+<power_components>
+<component id="1" power="0.023127805555555558" duration="36079" model="1" />
+<component id="1" process_state="1" power="0.023127805555555558" duration="10813" model="1" />
+<component id="7" power="0.1721347866888647" model="1" />
+<component id="9" power="0.036213516374118626" duration="770682" model="1" />
+<component id="12" power="1.552777777777778E-5" duration="559" model="1" />
+</power_components>
+</uid>
+<uid uid="10253" highest_drain_package="com.zte.onemorething" time_in_foreground="0" time_in_background="179725">
+<power_components>
+<component id="1" power="0.00824113888888889" duration="12317" model="1" />
+<component id="1" process_state="3" power="2.7805555555555558E-5" duration="13" model="1" />
+<component id="1" process_state="4" power="0.008213333333333333" duration="3840" model="1" />
+<component id="7" power="0.004152456546537736" model="1" />
+</power_components>
+</uid>
+<uid uid="10251" highest_drain_package="cn.nubia.virtualgamehandle" time_in_foreground="255354" time_in_background="24628078">
+<power_components>
+<component id="1" power="0.009468861111111112" duration="13766" model="1" />
+<component id="1" process_state="1" power="2.3527777777777777E-5" duration="11" model="1" />
+<component id="1" process_state="3" power="7.272222222222223E-5" duration="34" model="1" />
+<component id="1" process_state="4" power="0.009372611111111111" duration="4382" model="1" />
+<component id="7" power="0.004260195631539385" model="1" />
+</power_components>
+</uid>
+<uid uid="10250" highest_drain_package="cn.nubia.gamelauncher" time_in_foreground="44422" time_in_background="-1595246457">
+<power_components>
+<component id="0" power="2.4117838857396423" duration="38382" model="1" />
+<component id="1" power="0.07834536111111111" duration="102630" model="1" />
+<component id="1" process_state="1" power="0.0018971944444444446" duration="887" model="1" />
+<component id="1" process_state="2" power="0.07538727777777778" duration="35246" model="1" />
+<component id="1" process_state="3" power="1.6469444444444444E-4" duration="77" model="1" />
+<component id="1" process_state="4" power="8.961944444444445E-4" duration="419" model="1" />
+<component id="4" duration="41422" model="1" />
+<component id="5" duration="6280" model="1" />
+<component id="7" power="0.21125550601545406" model="1" />
+</power_components>
+</uid>
+<uid uid="10249" highest_drain_package="com.zte.zdmforkeyboard" time_in_foreground="0" time_in_background="464782">
+<power_components>
+<component id="1" power="0.011192805555555557" duration="16633" model="1" />
+<component id="1" process_state="2" power="2.7805555555555558E-5" duration="13" model="1" />
+<component id="1" process_state="4" power="0.011165000000000001" duration="5220" model="1" />
+<component id="7" power="0.005390393807725697" model="1" />
+<component id="12" power="1.2222222222222223E-6" duration="44" model="1" />
+</power_components>
+</uid>
+<uid uid="10248" highest_drain_package="cn.nubia.gameassist" time_in_foreground="-1617506104" time_in_background="25415138">
+<power_components>
+<component id="1" power="0.06428430555555556" duration="97075" model="1" />
+<component id="1" process_state="1" power="0.038420861111111114" duration="17963" model="1" />
+<component id="1" process_state="3" power="0.025863444444444446" duration="12092" model="1" />
+<component id="7" power="0.05982918309850729" model="1" />
+<component id="9" power="0.005873405374586582" duration="124378" model="1" />
+<component id="12" power="1.232777777777778E-4" duration="4438" model="1" />
+</power_components>
+</uid>
+<uid uid="10247" highest_drain_package="com.zte.privacyzone" time_in_foreground="-1592128666" time_in_background="0">
+<power_components>
+<component id="1" power="0.006643388888888889" duration="10933" model="1" />
+<component id="1" process_state="1" power="0.006643388888888889" duration="3106" model="1" />
+<component id="7" power="0.005777344042590774" model="1" />
+</power_components>
+</uid>
+<uid uid="10245" highest_drain_package="com.android.externalstorage" time_in_foreground="0" time_in_background="7563">
+<power_components>
+<component id="1" power="0.005445611111111111" duration="8124" model="1" />
+<component id="1" process_state="4" power="0.005445611111111111" duration="2546" model="1" />
+<component id="7" power="0.0043845255239966865" model="1" />
+</power_components>
+</uid>
+<uid uid="10244" highest_drain_package="cn.nubia.keymapcenter" time_in_foreground="0" time_in_background="285079">
+<power_components>
+<component id="1" power="0.007182388888888889" duration="10257" model="1" />
+<component id="1" process_state="3" power="4.277777777777778E-6" duration="2" model="1" />
+<component id="1" process_state="4" power="0.007178111111111112" duration="3356" model="1" />
+<component id="7" power="0.004771475758861763" model="1" />
+</power_components>
+</uid>
+<uid uid="10243" highest_drain_package="android.process.media" time_in_foreground="0" time_in_background="26051">
+<power_components>
+<component id="1" power="0.008435777777777778" duration="12265" model="1" />
+<component id="1" process_state="2" power="2.138888888888889E-6" duration="1" model="1" />
+<component id="1" process_state="3" power="2.3527777777777777E-5" duration="11" model="1" />
+<component id="1" process_state="4" power="0.008410111111111111" duration="3932" model="1" />
+<component id="7" power="0.011042193996338025" model="1" />
+</power_components>
+</uid>
+<uid uid="10242" highest_drain_package="com.zte.beautify" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.016067333333333333" duration="13082" model="1" />
+<component id="1" process_state="4" power="0.016067333333333333" duration="7512" model="1" />
+<component id="5" duration="1707" model="1" />
+<component id="7" power="0.003971879770267366" model="1" />
+</power_components>
+</uid>
+<uid uid="10241" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="12" power="1.5555555555555558E-6" duration="56" model="1" />
+</power_components>
+</uid>
+<uid uid="9999" highest_drain_package="traced_probes" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.051299111111111115" duration="56403" model="1" />
+</power_components>
+</uid>
+<uid uid="2903" highest_drain_package="tftp_server" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.004352638888888889" duration="6240" model="1" />
+</power_components>
+</uid>
+<uid uid="2000" highest_drain_package="com.android.shell" time_in_foreground="0" time_in_background="390">
+<power_components>
+<component id="1" power="0.005481972222222222" duration="8096" model="1" />
+<component id="1" process_state="4" power="0.005481972222222222" duration="2563" model="1" />
+</power_components>
+</uid>
+<uid uid="1092" highest_drain_package="prng_seeder" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.006155722222222222" duration="7631" model="1" />
+</power_components>
+</uid>
+<uid uid="1082" highest_drain_package="artd" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.7728447222222222" duration="1569909" model="1" />
+</power_components>
+</uid>
+<uid uid="1073" highest_drain_package="com.android.networkstack.process" time_in_foreground="-1592090196" time_in_background="0">
+<power_components>
+<component id="1" power="0.0885115" duration="98173" model="1" />
+<component id="1" process_state="1" power="0.0885115" duration="41382" model="1" />
+<component id="11" power="0.06574222222222223" duration="1315" model="1" />
+<component id="11" process_state="1" power="0.06574222222222223" model="1" />
+<component id="12" power="0.02558077777777778" duration="920908" model="1" />
+</power_components>
+</uid>
+<uid uid="1072" highest_drain_package="gpuservice" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.0031313333333333336" duration="4149" model="1" />
+</power_components>
+</uid>
+<uid uid="1069" highest_drain_package="lmkd" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.10246347222222223" duration="123419" model="1" />
+</power_components>
+</uid>
+<uid uid="1068" highest_drain_package="com.android.se" time_in_foreground="-1592090724" time_in_background="0">
+<power_components>
+<component id="1" power="0.008330972222222222" duration="12869" model="1" />
+<component id="1" process_state="1" power="0.008330972222222222" duration="3895" model="1" />
+</power_components>
+</uid>
+<uid uid="1067" highest_drain_package="incidentd" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.0022308611111111114" duration="3163" model="1" />
+</power_components>
+</uid>
+<uid uid="1066" highest_drain_package="statsd" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.2197045277777778" duration="277357" model="1" />
+</power_components>
+</uid>
+<uid uid="1058" highest_drain_package="tombstoned" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.003050055555555556" duration="4061" model="1" />
+</power_components>
+</uid>
+<uid uid="1053" highest_drain_package="webview_zygote" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.002966638888888889" duration="4371" model="1" />
+</power_components>
+</uid>
+<uid uid="1051" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="11" power="0.015173333333333334" duration="288" model="1" />
+<component id="11" process_state="1" power="0.015173333333333334" model="1" />
+</power_components>
+</uid>
+<uid uid="1047" highest_drain_package="vendor.qti.camera.provider-service_64" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.05465502777777778" duration="77604" model="1" />
+</power_components>
+</uid>
+<uid uid="1046" highest_drain_package="media.swcodec" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.010846305555555555" duration="15132" model="1" />
+</power_components>
+</uid>
+<uid uid="1041" highest_drain_package="android.hardware.audio.service_64" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="5.6051765" duration="4864073" model="1" />
+<component id="12" power="0.0025271111111111115" duration="90976" model="1" />
+</power_components>
+</uid>
+<uid uid="1040" highest_drain_package="media.extractor" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.0011250555555555556" duration="1357" model="1" />
+</power_components>
+</uid>
+<uid uid="1036" highest_drain_package="logd" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.21843830555555557" duration="272599" model="1" />
+</power_components>
+</uid>
+<uid uid="1021" highest_drain_package="lowi-server" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.026789583333333335" duration="40218" model="1" />
+</power_components>
+</uid>
+<uid uid="1019" highest_drain_package="drmserver" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="8.555555555555556E-6" duration="23" model="1" />
+</power_components>
+</uid>
+<uid uid="1017" highest_drain_package="keystore2" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.04799666666666667" duration="46879" model="1" />
+</power_components>
+</uid>
+<uid uid="1013" highest_drain_package="mediaserver" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.043021611111111115" duration="56664" model="1" />
+</power_components>
+</uid>
+<uid uid="1010" highest_drain_package="android.hardware.wifi-service" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="0.3095635277777778" duration="422556" model="1" />
+<component id="11" power="0.15486444444444444" duration="3098" model="1" />
+<component id="11" process_state="1" power="0.15486444444444444" model="1" />
+</power_components>
+</uid>
+<uid uid="1002" highest_drain_package="com.android.bluetooth" time_in_foreground="-1592093944" time_in_background="0">
+<power_components>
+<component id="1" power="0.1749675277777778" duration="202444" model="1" />
+<component id="1" process_state="1" power="0.1749675277777778" duration="81803" model="1" />
+</power_components>
+</uid>
+<uid uid="1001" highest_drain_package="com.android.phone" time_in_foreground="-1592090582" time_in_background="0">
+<power_components>
+<component id="1" power="0.2306535" duration="323971" model="1" />
+<component id="1" process_state="1" power="0.2306535" duration="107838" model="1" />
+</power_components>
+</uid>
+<uid uid="0" highest_drain_package="crtc_commit:203" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="1" power="11.449082944444445" duration="9321325" model="1" />
+<component id="11" power="0.27661111111111114" duration="4979" model="1" />
+<component id="11" process_state="1" power="0.27661111111111114" model="1" />
+</power_components>
+</uid>
+<uid uid="-253" time_in_foreground="0" time_in_background="0">
+<power_components>
+<component id="11" power="0.03188666666666667" duration="633" model="1" />
+<component id="11" process_state="1" power="0.03188666666666667" model="1" />
+</power_components>
+</uid>
+</battery_usage_stats>
